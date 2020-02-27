@@ -1,15 +1,17 @@
 package airport;
 
+import states.StatesPorter;
+
 public class Porter {
-	enum states {WAITING_FOR_A_PLANE_TO_LAND, AT_THE_PLANES_HOLD, AT_THE_LUGGAGE_BELT_CONVEYOR, AT_THE_STOREROOM};
+	
 	Bag b;
 	int planeId;
-	states state;
+	StatesPorter state;
 	public Porter(Bag b, int planeId) {
 		super();
 		this.b = b;
 		this.planeId = planeId;
-		this.state = states.WAITING_FOR_A_PLANE_TO_LAND;
+		this.state = StatesPorter.WAITING_FOR_A_PLANE_TO_LAND;
 	}
 	public Bag getB() {
 		return b;
@@ -23,10 +25,10 @@ public class Porter {
 	public void setPlaneId(int planeId) {
 		this.planeId = planeId;
 	}
-	public states getState() {
+	public StatesPorter getState() {
 		return state;
 	}
-	public void setState(states state) {
+	public void setState(StatesPorter state) {
 		this.state = state;
 	}
 	

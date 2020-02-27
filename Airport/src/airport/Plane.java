@@ -1,19 +1,21 @@
 package airport;
 
+import java.util.Queue;
+
 public class Plane {
-	Passenger[] passengers;
+	Queue<Passenger> passengers;
 	int planeId;
-	Bag[] bags;
-	public Plane(Passenger[] passengers, int planeId, Bag[] bags) {
+	Queue<Bag> bags;
+	public Plane(Queue<Passenger> passengers, int planeId, Queue<Bag> bags) {
 		super();
 		this.passengers = passengers;
 		this.planeId = planeId;
 		this.bags = bags;
 	}
-	public Passenger[] getPassengers() {
+	public Queue<Passenger> getPassengers() {
 		return passengers;
 	}
-	public void setPassengers(Passenger[] passengers) {
+	public void setPassengers(Queue<Passenger> passengers) {
 		this.passengers = passengers;
 	}
 	public int getPlaneId() {
@@ -22,10 +24,13 @@ public class Plane {
 	public void setPlaneId(int planeId) {
 		this.planeId = planeId;
 	}
-	public Bag[] getBags() {
+	public Queue<Bag> getBags() {
 		return bags;
 	}
-	public void setBags(Bag[] bags) {
+	public Bag getBag(){
+		return bags.remove();
+	}
+	public void setBags(Queue<Bag> bags) {
 		this.bags = bags;
 	}
 }
