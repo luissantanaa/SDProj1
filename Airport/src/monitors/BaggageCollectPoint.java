@@ -11,7 +11,6 @@ public class BaggageCollectPoint {
 		bags = new ArrayList<Bag>();
 	}
 	public void carryItToAppStore(List<Bag> bagList){
-		
+		bags.addAll(bagList);
 	}
-	
 }

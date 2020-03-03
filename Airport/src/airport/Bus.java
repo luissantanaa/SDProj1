@@ -1,26 +1,19 @@
 package airport;
 
-import states.StatesBusD;
+import java.util.List;
 
-public class Bus {
-	
-	Passenger[] passengers;
-	StatesBusD state;
-	public Bus(Passenger[] passengers) {
+
+public class Bus {	
+	List<Passenger> passengers;
+	public Bus(List<Passenger> passengers) {
 		super();
 		this.passengers = passengers;
-		this.state =  StatesBusD.PARKING_AT_THE_ARRIVAL_TERMINAL;
 	}
-	public Passenger[] getPassengers() {
+	public List<Passenger> getPassengers() {
 		return passengers;
 	}
-	public void setPassengers(Passenger[] passengers) {
+	public void setPassengers(List<Passenger> passengers) {
 		this.passengers = passengers;
 	}
-	public StatesBusD getState() {
-		return state;
-	}
-	public void setState(StatesBusD state) {
-		this.state = state;
-	}
+	
 }
