@@ -10,7 +10,7 @@ public class BaggageCollectPoint {
 	public BaggageCollectPoint() {
 		bags = new ArrayList<Bag>();
 	}
-	public void carryItToAppStore(List<Bag> bagList){
-		bags.addAll(bagList);
+	public void carryItToAppStore(Bag bag){
+		bags.add(bag);
 	}
 }
