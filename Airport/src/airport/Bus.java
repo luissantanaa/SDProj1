@@ -1,15 +1,16 @@
 package airport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class Bus {	
 	private List<Passenger> passengers;
 	private int maxPasse;
-	public Bus(List<Passenger> passengers,int MaxPasse) {
+	public Bus(int MaxPasse) {
 		super();
 		this.maxPasse = MaxPasse;
-		this.passengers = passengers;
+		this.passengers = new ArrayList<Passenger>();
 	}
 	public List<Passenger> getPassengers() {
 		return passengers;

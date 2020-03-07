@@ -9,6 +9,6 @@ public class ArrivalTermExit {
 	}
 	
 	public void GoHome(Passenger P) {
-
+		
 	}
 }

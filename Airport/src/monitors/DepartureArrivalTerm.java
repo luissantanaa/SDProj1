@@ -1,10 +1,11 @@
 package monitors;
 
+import Interfaces.DepartureArrivalTermPassengerInterface;
 import airport.Bus;
 import airport.Passenger;
 import states.StatesPerson;
 
-public class DepartureArrivalTerm {
+public class DepartureArrivalTerm implements DepartureArrivalTermPassengerInterface{
 	private Bus bus;
 	
 	public DepartureArrivalTerm(Bus bus) {
@@ -15,5 +16,6 @@ public class DepartureArrivalTerm {
 		if(!bus.removePassenger(P)) {
 			//erro
 		}
+		P.leaveTheBus();
 	}
 }

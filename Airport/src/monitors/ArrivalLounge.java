@@ -1,15 +1,29 @@
 package monitors;
 
-import airport.Bus;
+import Interfaces.ArrivalLoungeInterfacePassenger;
 import airport.Passenger;
-import states.StatesPerson;
 
-public class ArrivalLounge {
+public class ArrivalLounge implements ArrivalLoungeInterfacePassenger{
 	
-	public ArrivalLounge() {
-		
-	}
 	public void whatShouldIDo(Passenger P) {
-		
+		if(P.getDest()) {
+			
+			P.goHome();
+			
+		}else {
+			
+			if(P.HasBag()) {
+				
+				P.goCollectABag();
+				
+			}else {
+				
+				P.takeABus();
+				
+			}
+		}
 	}
 }
+
+
+
