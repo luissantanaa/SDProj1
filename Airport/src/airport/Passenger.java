@@ -9,12 +9,14 @@ import Interfaces.BaggageReclaimOfficePassengerInterface;
 import Interfaces.DepartureArrivalTermPassengerInterface;
 import Interfaces.DepartureTermEntrancePassengerInterface;
 import states.StatesPerson;
-import monitors.ArrivalLounge;
-import monitors.BaggageCollectPoint;
 public class Passenger {
 	
+	
+	// Estado em que se encontra
 	private StatesPerson state;
 	
+	
+	// Interfaces para os monitors
 	private ArrivalLoungeInterfacePassenger arrivalmonitor;
 	private BaggageCollectPointPassengerInterface baggagecollectpoint;
 	private ArrivalTransferTermPassengerInterface arrivaltransfertermPassengerinterface;
@@ -22,10 +24,14 @@ public class Passenger {
 	private DepartureArrivalTermPassengerInterface departurearrivaltermpassengerinterface;
 	private DepartureTermEntrancePassengerInterface departuretermentrancepassengerinterface;
 	
+	
+	// Variaveis Pessoais
 	private int id;
 	private List<Bag> b;
 	private boolean dest;
 	private String time = null;
+	
+	
 	
 	public Passenger(int id, List<Bag> b, 
 			         boolean destination, 
@@ -39,33 +45,49 @@ public class Passenger {
 		this.id = id;
 		this.b = b;
 		this.dest = destination;
-		this.arrivalmonitor=arrivalmonitor;
 		this.state = StatesPerson.AT_THE_DISEMBARKING_ZONE;
+		
+		//Monitors interfaces
+		this.arrivalmonitor=arrivalmonitor;
 		this.baggagecollectpoint=baggagecollectpoint;
 		this.baggageReclaimofficepassengerinterface=baggageReclaimofficepassengerinterface;
 		this.departurearrivaltermpassengerinterface=departurearrivaltermpassengerinterface;
 		this.departuretermentrancepassengerinterface=departuretermentrancepassengerinterface;
 		
 	}
-	public Passenger(int id, List<Bag> b, boolean destination, String time) {
+	
+	public Passenger(int id, List<Bag> b, boolean destination, String time, 
+			         ArrivalLoungeInterfacePassenger arrivalmonitor, 
+			         BaggageCollectPointPassengerInterface baggagecollectpoint,
+			         ArrivalTransferTermPassengerInterface arrivaltransfertermPassengerinterface,
+			         BaggageReclaimOfficePassengerInterface baggageReclaimofficepassengerinterface,
+			         DepartureArrivalTermPassengerInterface departurearrivaltermpassengerinterface,
+			         DepartureTermEntrancePassengerInterface departuretermentrancepassengerinterface) {
+		
 		this.id = id;
 		this.b = b;
 		this.dest = destination;
 		this.time = time;
 		this.state = StatesPerson.AT_THE_DISEMBARKING_ZONE;
+		
+		//Monitors interfaces
+		this.arrivalmonitor=arrivalmonitor;
+		this.baggagecollectpoint=baggagecollectpoint;
+		this.baggageReclaimofficepassengerinterface=baggageReclaimofficepassengerinterface;
+		this.departurearrivaltermpassengerinterface=departurearrivaltermpassengerinterface;
+		this.departuretermentrancepassengerinterface=departuretermentrancepassengerinterface;
+
 	}
 	
+	
+	
+	
+	//Getters and Setters
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	public boolean HasBag() {
-		if(b.size()==0) {
-			return false;
-		}
-		return true;
 	}
 	public List<Bag> getB() {
 		return b;
@@ -96,8 +118,7 @@ public class Passenger {
 	}
 	
 	
-	
-	
+	// Verifica se o passageiro se encontra num estado final
 	public boolean stateIsFinal() {
 		if(this.state== StatesPerson.EXITING_THE_ARRIVAL_TERMINAL || this.state== StatesPerson.ENTERING_THE_DEPARTURE_TERMINAL) {
 			return true;
@@ -107,36 +128,49 @@ public class Passenger {
 	
 	
 	
-	
-	
-	
-	
+	// Maquina de Estados
 	public void run() {
 		while(!stateIsFinal()) {
 			switch(this.state) {
 				case AT_THE_DISEMBARKING_ZONE:
-					arrivalmonitor.whatShouldIDo(this);
+					
+					// Retorna o estado dependendo se tem malas e se chegou ao seu destino
+					this.state=arrivalmonitor.whatShouldIDo(this.b, this.dest);
 					break;
+					
 				case AT_THE_LUGGAGE_COLLECTION_POINT:
-					baggagecollectpoint.collectBag(this);
+					
+						if(baggagecollectpoint.collectBag(this.b)) { // verifica se é possivel recolher a mala
+							goHome(); // vai para casa
+						}else {
+							reportMissingBag(); // reportar mala perdida
+						}
 					break;
+					
 				case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
-					arrivaltransfertermPassengerinterface.enterTheBus(this);
+					if(arrivaltransfertermPassengerinterface.enterTheBus(this)) { // verifica se é possivel entrar no autocarro
+						takeABus(); // entrar no autocarro
+					}
 					break;
 				case AT_THE_BAGGAGE_RECLAIM_OFFICE:
-					baggageReclaimofficepassengerinterface.reportMissingBag(this);
+					
+					baggageReclaimofficepassengerinterface.reportMissingBag(this); // reportar mala perdida
+					goHome(); // ir para casa
+					
 					break;
 				case TERMINAL_TRANSFER:
-					departurearrivaltermpassengerinterface.leaveTheBus(this);
+					departurearrivaltermpassengerinterface.leaveTheBus(this); // sair do autocarro
+					leaveTheBus();
 					break;
+					
 				case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
-					departuretermentrancepassengerinterface.prepareNextLeg(this);
+					departuretermentrancepassengerinterface.prepareNextLeg(this); // preparar proximo voo
+					prepareNextLeg();
 					break;
 				default:
 			}
 		}
 	}
-	
 	
 	
 	// Mudanças de estado
@@ -146,23 +180,19 @@ public class Passenger {
 	public void goCollectABag() {
 		this.state= StatesPerson.AT_THE_LUGGAGE_COLLECTION_POINT;
 	}
-	 public void takeABus() {
+	public void takeABus() {
 		 this.state= StatesPerson.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
 	 }
-	 
-	 public void reportMissingBag() {
+	public void reportMissingBag() {
 		 this.state= StatesPerson.AT_THE_BAGGAGE_RECLAIM_OFFICE;
 	 }
-	 
-	 public void enterTheBus() {
+	public void enterTheBus() {
 		 this.state= StatesPerson.TERMINAL_TRANSFER;
 	 }
-	 
-	 public void leaveTheBus() {
+	public void leaveTheBus() {
 		 this.state= StatesPerson.AT_THE_DEPARTURE_TRANSFER_TERMINAL;
 	 }
-
-	 public void prepareNextLeg() {
+	public void prepareNextLeg() {
 		 this.state= StatesPerson.ENTERING_THE_DEPARTURE_TERMINAL ;
 	 } 	
 }

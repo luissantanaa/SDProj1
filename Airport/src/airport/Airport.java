@@ -35,7 +35,7 @@ public class Airport {
 		//BusDriver
 		
 		//Plane
-		
+		//Plane plane = new Plane();
 		//Porter
 		
 		//Passenger

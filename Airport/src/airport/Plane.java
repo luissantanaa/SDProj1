@@ -18,6 +18,14 @@ public class Plane {
 	public void setPassengers(Queue<Passenger> passengers) {
 		this.passengers = passengers;
 	}
+	
+	public boolean removePassenger() {
+		if(this.passengers.remove() != null) {
+			return true;
+		}
+		return false;
+	}
+	
 	public int getPlaneId() {
 		return planeId;
 	}

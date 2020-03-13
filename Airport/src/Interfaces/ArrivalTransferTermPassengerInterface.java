@@ -3,5 +3,5 @@ package Interfaces;
 import airport.Passenger;
 
 public interface ArrivalTransferTermPassengerInterface {
-	public void enterTheBus(Passenger P) ;
+	public boolean enterTheBus(Passenger P) ;
 }

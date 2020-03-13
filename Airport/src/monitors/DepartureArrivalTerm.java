@@ -13,9 +13,6 @@ public class DepartureArrivalTerm implements DepartureArrivalTermPassengerInterf
 	}
 
 	public void leaveTheBus(Passenger P) {
-		if(!bus.removePassenger(P)) {
-			//erro
-		}
-		P.leaveTheBus();
+		bus.removePassenger(P);
 	}
 }

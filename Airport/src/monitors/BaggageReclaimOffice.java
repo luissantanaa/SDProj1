@@ -8,14 +8,15 @@ import airport.Bag;
 import airport.Passenger;
 
 public class BaggageReclaimOffice implements BaggageReclaimOfficePassengerInterface {
-
+	List<Passenger> passengerReclaim; 
 
 	public BaggageReclaimOffice() {
-
+		passengerReclaim = new ArrayList<Passenger>(); 
 	}
 	
 	public void reportMissingBag(Passenger P) {
-		P.goHome();
+		
+		passengerReclaim.add(P);
 	}
 
 }

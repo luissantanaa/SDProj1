@@ -9,6 +9,6 @@ public class DepartureTermEntr implements DepartureTermEntrancePassengerInterfac
 	public DepartureTermEntr() {
 	}
 	public void prepareNextLeg(Passenger P) {
-		P.prepareNextLeg();
+		//LOG 
 	}
 }

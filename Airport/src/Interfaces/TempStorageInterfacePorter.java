@@ -2,6 +2,6 @@ package Interfaces;
 
 import airport.Bag;
 
-public interface BaggageCollectPointPorterInterface {
+public interface TempStorageInterfacePorter {
 	public boolean addBag(Bag bag);
 }

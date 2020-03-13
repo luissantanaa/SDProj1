@@ -10,7 +10,11 @@ public class TempStorageArea {
 	public TempStorageArea() {
 		bags = new ArrayList<Bag>();
 	}
-	public void carryItToAppStore(Bag bag){
-		bags.add(bag);
+	public boolean addBag(Bag bag){
+		if(Math.random() > 0.25) {
+			bags.add(bag);
+			return true;
+		} 
+		return false;
 	}
 }

@@ -18,10 +18,16 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	
 	
-	public void enterTheBus(Passenger P) {
+	public boolean enterTheBus(Passenger P) {
 		if(bus.addPassenger(P)) {
-			P.enterTheBus();;
+			if(!bus.hasSpace()) {
+				//notify bus driver
+			}
+			return true;
 		}
+		return false;
+			
+	
 	}
 
 	public void hasDaysWorkEnded(BusDriver BD) {

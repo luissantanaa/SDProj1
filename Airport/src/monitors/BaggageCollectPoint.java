@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Interfaces.BaggageCollectPointPassengerInterface;
 import Interfaces.BaggageCollectPointPorterInterface;
 import java.util.List;
+import java.lang.Math; 
 
 import airport.Bag;
 import airport.Passenger;
@@ -16,22 +17,23 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 		bags = new ArrayList<Bag>();
 	}
 	
-	public void carryItToAppStore(Bag bag){
-		bags.add(bag); 
+	public boolean addBag(Bag bag){
+		//lock e notify para acordar passageiro
+		if(Math.random() > 0.25) {
+			bags.add(bag);
+			return true;
+		} 
+		return false;
 	}
 	
-	public boolean collectBag(Passenger P) {
-		for(int i=0; i<P.getB().size();i++) {
-			if(bags.contains(P.getB().get(i))) {
-				bags.remove(P.getB().get(i));
+	public boolean collectBag(List<Bag> bag) {
+		for(int i=0; i<bag.size();i++) {
+			if(bags.contains(bag.get(i))) {
+				bags.remove(bag.get(i));
 			}else {
-				P.reportMissingBag();
 				return false;
 			}
 		}
-		
-		P.goHome();
 		return true;
 	}
-	
 }
