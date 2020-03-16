@@ -19,11 +19,11 @@ public class Plane {
 		this.passengers = passengers;
 	}
 	
-	public boolean removePassenger() {
-		if(this.passengers.remove() != null) {
-			return true;
-		}
-		return false;
+	public Passenger removePassenger() {
+		return this.passengers.remove();
+	}
+	public boolean isEmpty(){
+		return this.passengers.size()==0;
 	}
 	
 	public int getPlaneId() {
@@ -36,6 +36,7 @@ public class Plane {
 		return bags;
 	}
 	public Bag getBag(){
+		System.out.print("ja");
 		return bags.remove();
 	}
 	public void setBags(Queue<Bag> bags) {

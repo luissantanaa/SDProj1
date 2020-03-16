@@ -5,15 +5,17 @@ import java.util.concurrent.locks.ReentrantLock;
 import Interfaces.ArrivalTransferTermPassengerInterface;
 import airport.Bus;
 import airport.BusDriver;
+import airport.Logger;
 import airport.Passenger;
 
 public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterface{
 	private final ReentrantLock lock = new ReentrantLock();
 	private Bus bus;
+	private Logger logger;
 	
-	
-	public ArrivalTransferTerm(Bus bus) {
+	public ArrivalTransferTerm(Bus bus, Logger logger) {
 		this.bus = bus;
+		this.logger = logger;
 	}
 	
 	

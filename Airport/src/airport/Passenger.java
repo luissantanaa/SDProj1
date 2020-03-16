@@ -30,7 +30,8 @@ public class Passenger extends Thread{
 	private List<Bag> b;
 	private boolean dest;
 	private String time = null;
-	
+	private int bagCollected = 0;
+	private String destino;
 	
 	
 	public Passenger(int id, List<Bag> b, 
@@ -53,6 +54,10 @@ public class Passenger extends Thread{
 		this.baggageReclaimofficepassengerinterface=baggageReclaimofficepassengerinterface;
 		this.departurearrivaltermpassengerinterface=departurearrivaltermpassengerinterface;
 		this.departuretermentrancepassengerinterface=departuretermentrancepassengerinterface;
+		
+		if(dest){
+			destino = "FDT";
+		}
 		
 	}
 	
@@ -130,17 +135,17 @@ public class Passenger extends Thread{
 	
 	// Maquina de Estados
 	public void run() {
+		
 		while(!stateIsFinal()) {
 			switch(this.state) {
 				case AT_THE_DISEMBARKING_ZONE:
-					
 					// Retorna o estado dependendo se tem malas e se chegou ao seu destino
 					this.state=arrivalmonitor.whatShouldIDo(this.b, this.dest);
 					break;
 					
 				case AT_THE_LUGGAGE_COLLECTION_POINT:
-					
 						if(baggagecollectpoint.collectBag(this.b)) { // verifica se � possivel recolher a mala
+							this.bagCollected=b.size();
 							goHome(); // vai para casa
 						}else {
 							reportMissingBag(); // reportar mala perdida

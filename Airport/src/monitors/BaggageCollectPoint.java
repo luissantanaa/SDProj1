@@ -9,15 +9,18 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.lang.Math; 
 
 import airport.Bag;
+import airport.Logger;
 
 
 public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,BaggageCollectPointPassengerInterface  {
 	private final ReentrantLock lock = new ReentrantLock();
 
 	List<Bag> bags;
+	Logger logger;
 	
-	public BaggageCollectPoint() {
+	public BaggageCollectPoint(Logger logger) {
 		bags = new ArrayList<Bag>();
+		this.logger = logger;
 	}
 	
 	public boolean addBag(Bag bag){
@@ -25,7 +28,9 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 		lock.lock();
 		try {
 			if(Math.random() > 0.25) {
-				bags.add(bag);
+				logger.incrementCB();
+				logger.toPrint();
+				bags.add(bag);			
 				return true;
 			}
 		}finally {
@@ -39,6 +44,8 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 		try {	
 			for(int i=0; i<bag.size();i++) {
 				if(bags.contains(bag.get(i))) {
+					logger.decrementCB();
+					logger.toPrint();
 					bags.remove(bag.get(i));
 				}else {
 					return false;

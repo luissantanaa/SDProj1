@@ -2,14 +2,14 @@ package airport;
 
 import states.StatesBusD;
 
-public class BusDriver {
+public class BusDriver extends Thread{
 	StatesBusD state;
-	
-	public BusDriver(StatesBusD state) {
+	volatile boolean end = false;
+	public BusDriver() {
 		super();
 		this.state =  StatesBusD.PARKING_AT_THE_ARRIVAL_TERMINAL;
 	}
-	public StatesBusD getState() {
+	public StatesBusD getStates() {
 		return state;
 	}
 	public void setState(StatesBusD state) {
@@ -17,7 +17,7 @@ public class BusDriver {
 	}
 	
 	public void run() {
-		//while() {
+		while(!end) {
 			switch(this.state) {
 				case PARKING_AT_THE_ARRIVAL_TERMINAL:
 					//faltam cenas
@@ -38,8 +38,13 @@ public class BusDriver {
 					
 				default:
 			}
-		//}
+		}
 	}
+
+	public void endThread(){
+        end = true;
+    }
+
 	public void goToArrivalTerminal() {
 		this.state = StatesBusD.DRIVING_BACKWARD;
 	}
