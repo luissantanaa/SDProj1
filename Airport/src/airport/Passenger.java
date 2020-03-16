@@ -9,7 +9,7 @@ import Interfaces.BaggageReclaimOfficePassengerInterface;
 import Interfaces.DepartureArrivalTermPassengerInterface;
 import Interfaces.DepartureTermEntrancePassengerInterface;
 import states.StatesPerson;
-public class Passenger {
+public class Passenger extends Thread{
 	
 	
 	// Estado em que se encontra
@@ -83,7 +83,7 @@ public class Passenger {
 	
 	
 	//Getters and Setters
-	public int getId() {
+	public int getPId() {
 		return id;
 	}
 	public void setId(int id) {
@@ -107,7 +107,7 @@ public class Passenger {
 	public void setTime(String time) {
 		this.time = time;
 	}
-	public StatesPerson getState() {
+	public StatesPerson getStates() {
 		return state;
 	}
 	public void setState(StatesPerson state) {
@@ -140,7 +140,7 @@ public class Passenger {
 					
 				case AT_THE_LUGGAGE_COLLECTION_POINT:
 					
-						if(baggagecollectpoint.collectBag(this.b)) { // verifica se é possivel recolher a mala
+						if(baggagecollectpoint.collectBag(this.b)) { // verifica se ï¿½ possivel recolher a mala
 							goHome(); // vai para casa
 						}else {
 							reportMissingBag(); // reportar mala perdida
@@ -148,7 +148,7 @@ public class Passenger {
 					break;
 					
 				case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
-					if(arrivaltransfertermPassengerinterface.enterTheBus(this)) { // verifica se é possivel entrar no autocarro
+					if(arrivaltransfertermPassengerinterface.enterTheBus(this)) { // verifica se ï¿½ possivel entrar no autocarro
 						takeABus(); // entrar no autocarro
 					}
 					break;
@@ -173,7 +173,7 @@ public class Passenger {
 	}
 	
 	
-	// Mudanças de estado
+	// Mudanï¿½as de estado
 	public void goHome() {
 		this.state = StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
 	}

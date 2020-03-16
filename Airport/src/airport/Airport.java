@@ -40,12 +40,12 @@ public class Airport {
 		
 		//Passenger
 		
-		Passenger p = new Passenger(0,listb,false,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+		Thread p =new Thread( new Passenger(0,listb,false,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 				(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 				(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 				(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
 				(DepartureArrivalTermPassengerInterface) departurearrivalterm,
-				(DepartureTermEntrancePassengerInterface) departuretermentr);
+				(DepartureTermEntrancePassengerInterface) departuretermentr));
 	
 		
 		

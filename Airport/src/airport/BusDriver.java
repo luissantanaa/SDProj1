@@ -17,7 +17,7 @@ public class BusDriver {
 	}
 	
 	public void run() {
-		while() {
+		//while() {
 			switch(this.state) {
 				case PARKING_AT_THE_ARRIVAL_TERMINAL:
 					//faltam cenas
@@ -38,7 +38,7 @@ public class BusDriver {
 					
 				default:
 			}
-		}
+		//}
 	}
 	public void goToArrivalTerminal() {
 		this.state = StatesBusD.DRIVING_BACKWARD;

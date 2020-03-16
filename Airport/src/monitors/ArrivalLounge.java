@@ -1,18 +1,18 @@
 package monitors;
 
 
-import java.util.ArrayList;
+
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import Interfaces.ArrivalLoungeInterfacePassenger;
 import Interfaces.ArrivalLoungeInterfacePorter;
 import airport.Bag;
-import airport.Passenger;
 import airport.Plane;
 import states.StatesPerson;
-import states.StatesPorter;
 
 public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLoungeInterfacePorter{
+	private final ReentrantLock lock = new ReentrantLock();
 	Plane plane;
 	
 	public Plane getPlane() {
@@ -42,8 +42,13 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	}
 	
 	public Bag collectBag() {
-		if(this.plane.getBags().size() > 0) {
-			return plane.getBags().remove();
+		lock.lock();
+		try{	
+			if(this.plane.getBags().size() > 0) {
+				return plane.getBags().remove();
+			}
+		}finally {
+			lock.unlock();
 		}
 		return null;
 	}

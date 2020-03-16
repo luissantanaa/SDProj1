@@ -1,11 +1,14 @@
 package monitors;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import Interfaces.DepartureArrivalTermPassengerInterface;
 import airport.Bus;
 import airport.Passenger;
-import states.StatesPerson;
 
 public class DepartureArrivalTerm implements DepartureArrivalTermPassengerInterface{
+	private final ReentrantLock lock = new ReentrantLock();
+
 	private Bus bus;
 	
 	public DepartureArrivalTerm(Bus bus) {
@@ -13,6 +16,12 @@ public class DepartureArrivalTerm implements DepartureArrivalTermPassengerInterf
 	}
 
 	public void leaveTheBus(Passenger P) {
-		bus.removePassenger(P);
+		lock.lock();
+		try {
+			bus.removePassenger(P);
+	
+		}finally {
+			lock.unlock();
+		}
 	}
 }

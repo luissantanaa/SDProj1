@@ -1,13 +1,14 @@
 package monitors;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import Interfaces.ArrivalTransferTermPassengerInterface;
 import airport.Bus;
 import airport.BusDriver;
 import airport.Passenger;
-import states.StatesBusD;
-import states.StatesPerson;
 
 public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterface{
+	private final ReentrantLock lock = new ReentrantLock();
 	private Bus bus;
 	
 	
@@ -19,11 +20,16 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	
 	public boolean enterTheBus(Passenger P) {
-		if(bus.addPassenger(P)) {
-			if(!bus.hasSpace()) {
-				//notify bus driver
+		lock.lock();
+		try {	
+			if(bus.addPassenger(P)) {
+				if(!bus.hasSpace()) {
+					//notify bus driver
+				}
+				return true;
 			}
-			return true;
+		}finally {
+			lock.unlock();
 		}
 		return false;
 			
