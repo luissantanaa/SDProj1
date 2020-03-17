@@ -4,6 +4,7 @@ import java.util.Queue;
 
 public class Plane {
 	Queue<Passenger> passengers;
+	 
 	int planeId;
 	Queue<Bag> bags;
 	public Plane(Queue<Passenger> passengers, int planeId, Queue<Bag> bags) {

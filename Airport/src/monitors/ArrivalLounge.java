@@ -17,25 +17,25 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	private final ReentrantLock lock = new ReentrantLock();
 	private final Condition porterc = lock.newCondition(); 
 	Plane plane;
+	int size;
 	Logger logger;
 	public Plane getPlane() {
 		return plane;
 	}
 	public void setPlane(Plane plane) {
 		this.plane = plane;
-		
+		size = 0;
 	}
 	public ArrivalLounge(Logger logger){
-		
+		size = 0;
 		this.logger = logger;
 		
 	}
 	public StatesPerson whatShouldIDo(List<Bag> bag, boolean dest) {
+		
 		lock.lock();
 		try {
-			if(plane.isEmpty()) {
-				porterc.signal();
-			}
+			
 			if(dest) {
 				if(bag.isEmpty()) {
 					return StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
@@ -48,6 +48,12 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 			}
 			
 		}finally {
+			
+			size++;
+			if(size==6) {
+				
+				porterc.signal();
+			}
 			lock.unlock();
 		}	
 	}
@@ -55,10 +61,14 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	public boolean takeARest() {
 		lock.lock();
 		try {	
-			while(plane==null || !plane.isEmpty()) {
+			while(plane==null || size!=6) {
 				porterc.await();
 			}
-			return true;
+			size=0;
+			if(plane.getBags().size()>0) {
+				return true;
+			}
+			
 			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -75,13 +85,13 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 				if(this.plane.getBags().size() > 0) {
 					logger.toPrint();
 					return plane.getBag();
+				}else {
+					return null;
 				}
 			}finally {
 				lock.unlock();
 			}
 			
-		
-		return null;
 	}
 
 }

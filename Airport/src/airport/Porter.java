@@ -69,16 +69,17 @@ public class Porter extends Thread{
 					if(this.b == null) {
 						
 						this.noMoreBagsToCollect();
-						break;
-					}
-					if(this.b.isDest()) {
-						this.baggageCollectPointMonitor.addBag(this.b);
-						this.carryItToAppropriateStore(StatesPorter.AT_THE_LUGGAGE_BELT_CONVEYOR);
 					}else {
-						this.tempstoragemonitor.addBag(this.b);
-						this.carryItToAppropriateStore(StatesPorter.AT_THE_STOREROOM);
+						if(this.b.isDest()) {
+							this.baggageCollectPointMonitor.addBag(this.b);
+							this.carryItToAppropriateStore(StatesPorter.AT_THE_LUGGAGE_BELT_CONVEYOR);
+						}else {
+							this.tempstoragemonitor.addBag(this.b);
+							this.carryItToAppropriateStore(StatesPorter.AT_THE_STOREROOM);
+						}
+						
 					}
-					
+				
 					break;
 				case AT_THE_LUGGAGE_BELT_CONVEYOR:
 					this.tryToCollectABag();

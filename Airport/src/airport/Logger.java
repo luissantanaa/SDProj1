@@ -65,14 +65,22 @@ public class Logger{
     
     
     public void addPassengers(Passenger p) {
-    	passenger.add(p);
-    	toPrint();
+    	lock.lock();
+		try {
+			passenger.add(p);
+			toPrint();
+		}finally {
+			lock.unlock();
+		}	
+    	
+    	
     }
     public void resetPassenger() {
     	passenger.clear();
     }
 
     public void incrementCB() {
+    	
     	CB++;
     }
     public void decrementCB() {

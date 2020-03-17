@@ -108,6 +108,7 @@ public class Airport {
 			
 			for(int y=0;y<nPassengers;y++){
 				try {
+				
 					passengers[n][y].join();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
