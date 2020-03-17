@@ -12,7 +12,7 @@ public class Airport {
 
 	public static void main(String[] args) {
 
-		int nPlanes = 1;
+		int nPlanes = 5;
 		int nPassengers = 6;
 		
 		
@@ -22,6 +22,7 @@ public class Airport {
 		
 		//LOGGER
 		Logger log = new Logger();
+		log.printInit();
 				
 		//BUS
 		Bus bus = new Bus(3);
@@ -54,14 +55,14 @@ public class Airport {
 			for(int i=0;i<nPassengers;i++){
 				int rand = new Random().nextInt(4);
 				if(rand==0){
-						passengers[n][i] =  new Passenger(n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+						passengers[n][i] =  new Passenger(6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
 							(DepartureArrivalTermPassengerInterface) departurearrivalterm,
 							(DepartureTermEntrancePassengerInterface) departuretermentr);
 				}else{
-						passengers[n][i] = new Passenger(n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+						passengers[n][i] = new Passenger(6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
@@ -71,7 +72,7 @@ public class Airport {
 				int nBags = new Random().nextInt(3);
 				List<Bag> listbag = new ArrayList<Bag>();
 				for(int nb = 1; nb<=nBags; nb++){
-					Bag b = new Bag(i+n,  passengers[n][i].isDest());
+					Bag b = new Bag(i+n,  passengers[n][i].isDest(), nb);
 					listbag.add(b);
 					BagQueue.add(b);
 				}
@@ -97,22 +98,23 @@ public class Airport {
 		
 		for(int n=0; n<nPlanes;n++){
 			arrivalmonitor.setPlane(planes[n]);
-			
+			int i=0;
 			log.setPlane(planes[n]);
 			while(!planes[n].isEmpty()) {
-				planes[n].removePassenger().start();
+				Passenger p = planes[n].removePassenger();
+				log.addPassengers(p);
+				p.start();
 			}
 			
 			for(int y=0;y<nPassengers;y++){
-				//System.out.println("FORA" + y);
 				try {
 					passengers[n][y].join();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}	
-			//System.out.println("FORA");
+			}
+			log.resetPassenger();
 		}
 
 		BD.endThread();

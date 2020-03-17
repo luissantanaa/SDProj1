@@ -32,7 +32,6 @@ public class Passenger extends Thread{
 	private String time = null;
 	private int bagCollected = 0;
 	private String destino;
-	private boolean bagFound;
 	
 	
 	public Passenger(int id, List<Bag> b, 
@@ -132,7 +131,36 @@ public class Passenger extends Thread{
 		return false;
 	}
 	
-	
+	public String getString() {
+			String s="";
+		switch(this.state) {
+			case AT_THE_DISEMBARKING_ZONE:
+				s = s + "WSD";
+				break;
+			case AT_THE_LUGGAGE_COLLECTION_POINT:
+				s = s + "LCP";
+				break;
+				
+			case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
+				s = s + "ATT";
+				break;
+			case AT_THE_BAGGAGE_RECLAIM_OFFICE:
+				s = s + "BRO";
+				break;
+			case TERMINAL_TRANSFER:
+				s = s + "TRT";
+				break;
+				
+			case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
+				s = s + "DTT";
+			default:
+				s = s + "EAT";	
+		}
+		
+		
+		s = s + " --- " + this.b.size() + " " + this.bagCollected + " "; 
+		return s;
+	}
 	
 	// Maquina de Estados
 	public void run() {
@@ -141,24 +169,21 @@ public class Passenger extends Thread{
 			switch(this.state) {
 				case AT_THE_DISEMBARKING_ZONE:
 					// Retorna o estado dependendo se tem malas e se chegou ao seu destino
-					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
 					this.state=arrivalmonitor.whatShouldIDo(this.b, this.dest);
 					break;
 					
 				case AT_THE_LUGGAGE_COLLECTION_POINT:
-					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());				
-					
-					
 					for(int i=0;i< b.size();i++) {
-						bagFound = baggagecollectpoint.collectBag(this.b.get(i));
+						boolean bagFound = baggagecollectpoint.collectBag(this.b.get(i));
+						if(bagFound) {
+							this.bagCollected++;
+						}
 					}
 					
 					if(this.bagCollected==b.size()) { // verifica se � possivel recolher a mala
 						goHome(); // vai para casa
 					}else {
-						if(!bagFound) {
-							reportMissingBag(); // reportar mala perdida
-						}
+						reportMissingBag(); // reportar mala perdida
 					}
 					break;
 					

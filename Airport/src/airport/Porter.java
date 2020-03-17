@@ -32,20 +32,26 @@ public class Porter extends Thread{
 	public StatesPorter getStates() {
 		return state;
 	}
-	public int getStateInteger() {
+	public String getString() {
+		String s="";
 		switch(this.state) {
 		case WAITING_FOR_A_PLANE_TO_LAND:
-			return 0;
+			s = s + "WPTL";
+			break;
 		case AT_THE_PLANES_HOLD:
-			return 1;
+			s = s + "APLH";
+			break;
 		case AT_THE_LUGGAGE_BELT_CONVEYOR:
-			return 2;
+			s = s + "ALCB";
+			break;
 		case AT_THE_STOREROOM:
-			return 3;
+			s = s + "ALCR";
+			break;
 		default:
-			return -1;
-			
+				
 		}
+		return s;
+
 	}
 	
 	

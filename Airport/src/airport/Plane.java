@@ -36,7 +36,6 @@ public class Plane {
 		return bags;
 	}
 	public Bag getBag(){
-		System.out.print("ja");
 		return bags.remove();
 	}
 	public void setBags(Queue<Bag> bags) {

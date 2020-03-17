@@ -3,6 +3,7 @@ package monitors;
 
 
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import Interfaces.ArrivalLoungeInterfacePassenger;
@@ -14,6 +15,7 @@ import states.StatesPerson;
 
 public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLoungeInterfacePorter{
 	private final ReentrantLock lock = new ReentrantLock();
+	private final Condition porterc = lock.newCondition(); 
 	Plane plane;
 	Logger logger;
 	public Plane getPlane() {
@@ -29,36 +31,56 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		
 	}
 	public StatesPerson whatShouldIDo(List<Bag> bag, boolean dest) {
-		if(dest) {
-			if(bag.isEmpty()) {
-				return StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
-				
+		lock.lock();
+		try {
+			if(plane.isEmpty()) {
+				porterc.signal();
 			}
-			return StatesPerson.AT_THE_LUGGAGE_COLLECTION_POINT;
+			if(dest) {
+				if(bag.isEmpty()) {
+					return StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
+					
+				}
+				return StatesPerson.AT_THE_LUGGAGE_COLLECTION_POINT;
+				
+			}else {
+				return StatesPerson.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
+			}
 			
-		}else {
-			return StatesPerson.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
-		}
+		}finally {
+			lock.unlock();
+		}	
 	}
 	
 	public boolean takeARest() {
-		
-		if(plane!=null){
-			return plane.getPassengers().size() == 0 && this.plane.getBags().size() > 0; 
-		}
+		lock.lock();
+		try {	
+			while(plane==null || !plane.isEmpty()) {
+				porterc.await();
+			}
+			return true;
+			
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}finally {
+			lock.unlock();
+		}	
 		return false;
 	}
 	
 	public Bag collectBag() {
-		lock.lock();
-		try{	
-			logger.toPrint();
-			if(this.plane.getBags().size() > 0) {
-				return plane.getBag();
+			lock.lock();
+			try {
+				
+				if(this.plane.getBags().size() > 0) {
+					logger.toPrint();
+					return plane.getBag();
+				}
+			}finally {
+				lock.unlock();
 			}
-		}finally {
-			lock.unlock();
-		}
+			
+		
 		return null;
 	}
 
