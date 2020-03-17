@@ -54,7 +54,7 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		try{	
 			logger.toPrint();
 			if(this.plane.getBags().size() > 0) {
-				return plane.getBags().remove();
+				return plane.getBag();
 			}
 		}finally {
 			lock.unlock();

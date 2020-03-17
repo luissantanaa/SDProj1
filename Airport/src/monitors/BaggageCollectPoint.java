@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import Interfaces.BaggageCollectPointPassengerInterface;
 import Interfaces.BaggageCollectPointPorterInterface;
 import java.util.List;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 import java.lang.Math; 
 
@@ -14,6 +15,7 @@ import airport.Logger;
 
 public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,BaggageCollectPointPassengerInterface  {
 	private final ReentrantLock lock = new ReentrantLock();
+	 final Condition bagNotAdded = lock.newCondition(); 
 
 	List<Bag> bags;
 	Logger logger;
@@ -24,13 +26,14 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 	}
 	
 	public boolean addBag(Bag bag){
-		//lock e notify para acordar passageiro
+		//notify para acordar passageiro
 		lock.lock();
 		try {
-			if(Math.random() > 0.25) {
+			if(Math.random() >= 0) { //0.25
 				logger.incrementCB();
 				logger.toPrint();
 				bags.add(bag);			
+				bagNotAdded.signal();
 				return true;
 			}
 		}finally {
@@ -39,18 +42,22 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 		return false;
 	}
 	
-	public boolean collectBag(List<Bag> bag) {
+	public boolean collectBag(Bag bag) {
 		lock.lock();
 		try {	
-			for(int i=0; i<bag.size();i++) {
-				if(bags.contains(bag.get(i))) {
+			while(!bags.contains(bag)) {
+				bagNotAdded.await();
+			}
+				if(bags.contains(bag)) {
 					logger.decrementCB();
 					logger.toPrint();
-					bags.remove(bag.get(i));
+					bags.remove(bag);
 				}else {
 					return false;
 				}
-			}
+			
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}finally {
 			lock.unlock();
 		}	

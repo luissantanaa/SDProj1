@@ -32,6 +32,7 @@ public class Passenger extends Thread{
 	private String time = null;
 	private int bagCollected = 0;
 	private String destino;
+	private boolean bagFound;
 	
 	
 	public Passenger(int id, List<Bag> b, 
@@ -140,35 +141,47 @@ public class Passenger extends Thread{
 			switch(this.state) {
 				case AT_THE_DISEMBARKING_ZONE:
 					// Retorna o estado dependendo se tem malas e se chegou ao seu destino
+					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
 					this.state=arrivalmonitor.whatShouldIDo(this.b, this.dest);
 					break;
 					
 				case AT_THE_LUGGAGE_COLLECTION_POINT:
-						if(baggagecollectpoint.collectBag(this.b)) { // verifica se � possivel recolher a mala
-							this.bagCollected=b.size();
-							goHome(); // vai para casa
-						}else {
+					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());				
+					
+					
+					for(int i=0;i< b.size();i++) {
+						bagFound = baggagecollectpoint.collectBag(this.b.get(i));
+					}
+					
+					if(this.bagCollected==b.size()) { // verifica se � possivel recolher a mala
+						goHome(); // vai para casa
+					}else {
+						if(!bagFound) {
 							reportMissingBag(); // reportar mala perdida
 						}
+					}
 					break;
 					
 				case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
+					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
 					if(arrivaltransfertermPassengerinterface.enterTheBus(this)) { // verifica se � possivel entrar no autocarro
 						takeABus(); // entrar no autocarro
 					}
 					break;
 				case AT_THE_BAGGAGE_RECLAIM_OFFICE:
-					
+					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
 					baggageReclaimofficepassengerinterface.reportMissingBag(this); // reportar mala perdida
 					goHome(); // ir para casa
 					
 					break;
 				case TERMINAL_TRANSFER:
+					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
 					departurearrivaltermpassengerinterface.leaveTheBus(this); // sair do autocarro
 					leaveTheBus();
 					break;
 					
 				case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
+					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
 					departuretermentrancepassengerinterface.prepareNextLeg(this); // preparar proximo voo
 					prepareNextLeg();
 					break;

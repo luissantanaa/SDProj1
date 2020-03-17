@@ -12,7 +12,7 @@ public class Airport {
 
 	public static void main(String[] args) {
 
-		int nPlanes = 5;
+		int nPlanes = 1;
 		int nPassengers = 6;
 		
 		
@@ -102,8 +102,9 @@ public class Airport {
 			while(!planes[n].isEmpty()) {
 				planes[n].removePassenger().start();
 			}
-				
+			
 			for(int y=0;y<nPassengers;y++){
+				//System.out.println("FORA" + y);
 				try {
 					passengers[n][y].join();
 				} catch (InterruptedException e) {
@@ -111,7 +112,7 @@ public class Airport {
 					e.printStackTrace();
 				}
 			}	
-			
+			//System.out.println("FORA");
 		}
 
 		BD.endThread();

@@ -17,7 +17,7 @@ public class Logger{
     
     public void toPrint() {
     	System.out.println("PLANE   PORTER          DRIVER          ");
-        System.out.println(plane.getPlaneId() + " " + plane.getBags().size()+"	"
+    	System.out.println(plane.getPlaneId() + " " + plane.getBags().size()+"	"
         				+ porter.getStateInteger() + " " + CB + " " + CR );
     }
 
