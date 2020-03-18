@@ -12,16 +12,17 @@ public class Porter extends Thread{
 	private Bag b;
 	private StatesPorter state;
 	private TempStorageInterfacePorter tempstoragemonitor;
-
+	private Logger logger ;
 	volatile boolean end = false;
 
 
-	public Porter( ArrivalLoungeInterfacePorter arrivalmonitor, BaggageCollectPointPorterInterface baggageCollectPointMonitor, TempStorageInterfacePorter tempstoragemonitor) {
+	public Porter( Logger logger , ArrivalLoungeInterfacePorter arrivalmonitor, BaggageCollectPointPorterInterface baggageCollectPointMonitor, TempStorageInterfacePorter tempstoragemonitor) {
 		super();
 		this.arrivalmonitor = arrivalmonitor;
 		this.baggageCollectPointMonitor = baggageCollectPointMonitor;
 		this.tempstoragemonitor = tempstoragemonitor;
 		this.state = StatesPorter.WAITING_FOR_A_PLANE_TO_LAND;
+		this.logger = logger;
 	}
 	public Bag getB() {
 		return b;
@@ -60,6 +61,7 @@ public class Porter extends Thread{
 			switch(this.state) {
 				case WAITING_FOR_A_PLANE_TO_LAND:
 					if(arrivalmonitor.takeARest()){
+						logger.toPrint();
 						this.tryToCollectABag();
 					}
 					break;
@@ -71,11 +73,16 @@ public class Porter extends Thread{
 						this.noMoreBagsToCollect();
 					}else {
 						if(this.b.isDest()) {
-							this.baggageCollectPointMonitor.addBag(this.b);
 							this.carryItToAppropriateStore(StatesPorter.AT_THE_LUGGAGE_BELT_CONVEYOR);
+							this.baggageCollectPointMonitor.addBag(this.b);
+							logger.incrementCB();
+							logger.toPrint();
+							
 						}else {
-							this.tempstoragemonitor.addBag(this.b);
 							this.carryItToAppropriateStore(StatesPorter.AT_THE_STOREROOM);
+							logger.toPrint();
+							this.tempstoragemonitor.addBag(this.b);
+							
 						}
 						
 					}
@@ -94,6 +101,7 @@ public class Porter extends Thread{
 	
 	public void tryToCollectABag() {
 		this.state = StatesPorter.AT_THE_PLANES_HOLD;
+		logger.toPrint();
 	}
 	
 	public void carryItToAppropriateStore(StatesPorter state) {

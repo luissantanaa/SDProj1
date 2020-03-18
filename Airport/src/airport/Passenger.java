@@ -32,9 +32,9 @@ public class Passenger extends Thread{
 	private String time = null;
 	private int bagCollected = 0;
 	private String destino;
+	private Logger logger;
 	
-	
-	public Passenger(int id, List<Bag> b, 
+	public Passenger(Logger logger,int id, List<Bag> b, 
 			         boolean destination, 
 			         ArrivalLoungeInterfacePassenger arrivalmonitor, 
 			         BaggageCollectPointPassengerInterface baggagecollectpoint,
@@ -54,7 +54,7 @@ public class Passenger extends Thread{
 		this.baggageReclaimofficepassengerinterface=baggageReclaimofficepassengerinterface;
 		this.departurearrivaltermpassengerinterface=departurearrivaltermpassengerinterface;
 		this.departuretermentrancepassengerinterface=departuretermentrancepassengerinterface;
-		
+		this.logger = logger;
 		if(dest){
 			destino = "FDT";
 		}
@@ -164,19 +164,26 @@ public class Passenger extends Thread{
 	
 	// Maquina de Estados
 	public void run() {
-		
+		logger.addPassengers(this);
+		logger.toPrint();
 		while(!stateIsFinal()) {
 			switch(this.state) {
 				case AT_THE_DISEMBARKING_ZONE:
+					
 					// Retorna o estado dependendo se tem malas e se chegou ao seu destino
 					this.state=arrivalmonitor.whatShouldIDo(this.b, this.dest);
+					
+					logger.toPrint();
 					break;
 					
 				case AT_THE_LUGGAGE_COLLECTION_POINT:
+					logger.toPrint();
 					for(int i=0;i< b.size();i++) {
 						boolean bagFound = baggagecollectpoint.collectBag(this.b.get(i));
 						if(bagFound) {
 							this.bagCollected++;
+							logger.decrementCB();
+							logger.toPrint();
 						}
 					}
 					
@@ -219,23 +226,30 @@ public class Passenger extends Thread{
 	// Mudan�as de estado
 	public void goHome() {
 		this.state = StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
+		logger.toPrint();
 	}
 	public void goCollectABag() {
 		this.state= StatesPerson.AT_THE_LUGGAGE_COLLECTION_POINT;
+		logger.toPrint();
 	}
 	public void takeABus() {
 		 this.state= StatesPerson.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
+		 logger.toPrint();
 	 }
 	public void reportMissingBag() {
 		 this.state= StatesPerson.AT_THE_BAGGAGE_RECLAIM_OFFICE;
+		 logger.toPrint();
 	 }
 	public void enterTheBus() {
 		 this.state= StatesPerson.TERMINAL_TRANSFER;
+		 logger.toPrint();
 	 }
 	public void leaveTheBus() {
 		 this.state= StatesPerson.AT_THE_DEPARTURE_TRANSFER_TERMINAL;
+		 logger.toPrint();
 	 }
 	public void prepareNextLeg() {
 		 this.state= StatesPerson.ENTERING_THE_DEPARTURE_TERMINAL ;
+		 logger.toPrint();
 	 } 	
 }

@@ -68,7 +68,6 @@ public class Logger{
     	lock.lock();
 		try {
 			passenger.add(p);
-			toPrint();
 		}finally {
 			lock.unlock();
 		}	
@@ -80,7 +79,6 @@ public class Logger{
     }
 
     public void incrementCB() {
-    	
     	CB++;
     }
     public void decrementCB() {

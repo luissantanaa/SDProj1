@@ -55,14 +55,14 @@ public class Airport {
 			for(int i=0;i<nPassengers;i++){
 				int rand = new Random().nextInt(4);
 				if(rand==0){
-						passengers[n][i] =  new Passenger(6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+						passengers[n][i] =  new Passenger(log, 6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
 							(DepartureArrivalTermPassengerInterface) departurearrivalterm,
 							(DepartureTermEntrancePassengerInterface) departuretermentr);
 				}else{
-						passengers[n][i] = new Passenger(6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+						passengers[n][i] = new Passenger(log,6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
@@ -85,7 +85,7 @@ public class Airport {
 			planes[n] = new Plane(passengerQueue,n,BagQueue);	
 		}
 
-		Porter porter = new Porter((ArrivalLoungeInterfacePorter) arrivalmonitor,
+		Porter porter = new Porter(log,(ArrivalLoungeInterfacePorter) arrivalmonitor,
 			(BaggageCollectPointPorterInterface) baggagecollectpoint,
 			(TempStorageInterfacePorter) tempstoragearea);
 			
@@ -102,7 +102,7 @@ public class Airport {
 			log.setPlane(planes[n]);
 			while(!planes[n].isEmpty()) {
 				Passenger p = planes[n].removePassenger();
-				log.addPassengers(p);
+				//log.addPassengers(p);
 				p.start();
 			}
 			

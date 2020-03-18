@@ -30,14 +30,10 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 		lock.lock();
 		try {
 			if(Math.random() >= 0) { //0.25
-				bags.add(bag);	
-				
-				
+				bags.add(bag);
 				return true;
 			}
 		}finally {
-			logger.incrementCB();
-			logger.toPrint();
 			bagNotAdded.signal();
 			lock.unlock();
 		}
@@ -52,7 +48,7 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 			}
 				if(bags.contains(bag)) {
 					bags.remove(bag);
-			
+					
 					return true;
 				}else {
 					return false;
@@ -60,8 +56,7 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}finally {
-			logger.decrementCB();
-			logger.toPrint();
+			
 			lock.unlock();
 		}	
 		return false;

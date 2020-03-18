@@ -19,23 +19,24 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	Plane plane;
 	int size;
 	Logger logger;
+	
+	
 	public Plane getPlane() {
 		return plane;
 	}
 	public void setPlane(Plane plane) {
+		
 		this.plane = plane;
 		size = 0;
 	}
 	public ArrivalLounge(Logger logger){
 		size = 0;
 		this.logger = logger;
-		
 	}
 	public StatesPerson whatShouldIDo(List<Bag> bag, boolean dest) {
 		
 		lock.lock();
 		try {
-			
 			if(dest) {
 				if(bag.isEmpty()) {
 					return StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
@@ -81,14 +82,13 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	public Bag collectBag() {
 			lock.lock();
 			try {
-				
-				if(this.plane.getBags().size() > 0) {
-					logger.toPrint();
+				if(this.plane.getBags().size() > 0) {				
 					return plane.getBag();
 				}else {
 					return null;
 				}
 			}finally {
+				
 				lock.unlock();
 			}
 			
