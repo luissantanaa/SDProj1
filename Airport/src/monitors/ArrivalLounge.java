@@ -26,8 +26,8 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		return plane;
 	}
 	public void setPlane(Plane plane) {
-		
 		this.plane = plane;
+		this.logger.setBagSizes(this.getPlane().getPassengers().size());
 		size = 0;
 	}
 	public ArrivalLounge(Logger logger){

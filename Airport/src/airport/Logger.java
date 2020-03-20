@@ -14,6 +14,7 @@ public class Logger{
     List <Passenger> passenger;
     private final ReentrantLock lock = new ReentrantLock();
     
+    private int BagSize = 0;
     private int PassDest = 0;
     private int PassTransit = 0;
     private int CB=0;
@@ -84,8 +85,12 @@ public class Logger{
     	System.out.print("\n\nFinal report\r\n" + 
     			"N. of passengers which have this airport as their final destination = " + PassDest + "\r\n" + 
     			"N. of passengers in transit = " + PassTransit + "\r\n" + 
-    			"N. of bags that should have been transported in the the planes hold = ##\r\n" + 
+    			"N. of bags that should have been transported in the the planes hold = " + this.BagSize +"\r\n" + 
     			"N. of bags that were lost = "+ lBags);
+    }
+    
+    public void setBagSizes(int size) {
+    	this.BagSize = this.BagSize  +  size;
     }
     
     public void incPassDest() {
