@@ -1,5 +1,6 @@
 package airport;
 
+import Interfaces.ArrivalTransferTermBDriverInterface;
 import Interfaces.DepartureTransTermBDriverInterface;
 import monitors.DepartureTransTerm;
 import states.StatesBusD;
@@ -8,10 +9,18 @@ public class BusDriver extends Thread{
 	private StatesBusD state;
 	volatile boolean end = false;
 	private DepartureTransTermBDriverInterface departuretransmonitor;
-	public BusDriver(DepartureTransTermBDriverInterface departuretransmonitor) {
+	private ArrivalTransferTermBDriverInterface arrivaltranferterm;
+	private Logger logger;
+	
+	
+	public BusDriver(DepartureTransTermBDriverInterface departuretransmonitor,
+						ArrivalTransferTermBDriverInterface arrivaltranferterm,
+						Logger logger) {
 		super();
 		this.departuretransmonitor = departuretransmonitor;
 		this.state =  StatesBusD.PARKING_AT_THE_ARRIVAL_TERMINAL;
+		this.arrivaltranferterm = arrivaltranferterm;
+		this.logger = logger;
 	}
 	public StatesBusD getStates() {
 		return state;
@@ -25,15 +34,26 @@ public class BusDriver extends Thread{
 			switch(this.state) {
 				case PARKING_AT_THE_ARRIVAL_TERMINAL:
 					//faltam cenas
-					this.goToDepartureTerminal();
+					if(!arrivaltranferterm.hasDaysWorkEnded()) {
+						if(!arrivaltranferterm.BusNotFull()) {
+							
+							this.goToDepartureTerminal();
+						}
+					}else {
+						endThread();
+					}
+					
 					break;
 				case DRIVING_FORWARD:
+				
 					this.parkTheBusAndLetPassOff();
 					break;
 				
 				case PARKING_AT_THE_DEPARTURE_TERMINAL:
+					this.departuretransmonitor.arriveDepTransTerm();
 					this.departuretransmonitor.waitForPassengers();
 					this.goToArrivalTerminal();	
+					
 					break;
 									
 				case DRIVING_BACKWARD:
@@ -43,6 +63,7 @@ public class BusDriver extends Thread{
 				default:
 			}
 		}
+
 	}
 
 	public void endThread(){
@@ -54,6 +75,7 @@ public class BusDriver extends Thread{
 	}
 	public void parkTheBus() {
 		this.state = StatesBusD.PARKING_AT_THE_ARRIVAL_TERMINAL;
+		arrivaltranferterm.announcingBusBoarding();
 	}
 	public void goToDepartureTerminal() {
 		this.state = StatesBusD.DRIVING_FORWARD;

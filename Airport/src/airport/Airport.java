@@ -25,7 +25,7 @@ public class Airport {
 		log.printInit();
 				
 		//BUS
-		Bus bus = new Bus(3);
+		Bus bus = new Bus(1);
 
 
 		//Monitors
@@ -44,7 +44,8 @@ public class Airport {
 		
 		
 		//BusDriver
-		BusDriver BD = new BusDriver( (DepartureTransTermBDriverInterface) departuretransterm);
+		BusDriver BD = new BusDriver( (DepartureTransTermBDriverInterface) departuretransterm,
+									(ArrivalTransferTermBDriverInterface) arrivaltransferterm, log);
 		
 
 		//Passenger
@@ -121,7 +122,14 @@ public class Airport {
 			log.resetPassenger();
 		}
 		arrivalmonitor.lastFlight();
+		arrivaltransferterm.dayWordEnd();
 		
+		try {
+			porter.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		log.finalPrint();
 		

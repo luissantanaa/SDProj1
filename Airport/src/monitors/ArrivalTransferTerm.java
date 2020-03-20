@@ -1,37 +1,59 @@
 package monitors;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import Interfaces.ArrivalTransferTermBDriverInterface;
 import Interfaces.ArrivalTransferTermPassengerInterface;
 import airport.Bus;
 import airport.BusDriver;
 import airport.Logger;
 import airport.Passenger;
 
-public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterface{
+public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterface, ArrivalTransferTermBDriverInterface{
+	
+	
 	private final ReentrantLock lock = new ReentrantLock();
 	private final Condition busFull = lock.newCondition();
+	private final Condition passengerWait = lock.newCondition();
+	
 	private Bus bus;
 	private Logger logger;
+	private boolean dayWorkEnd;
+	private Queue<Passenger> passengersWaiting;
+	
 	
 	public ArrivalTransferTerm(Bus bus, Logger logger) {
 		this.bus = bus;
 		this.logger = logger;
+		this.dayWorkEnd = false;
+		this.passengersWaiting = new LinkedList<Passenger>();
 	}
 	
 	
 	
 	
-	public boolean enterTheBus(Passenger P) {
+	public boolean enterTheBus(Passenger p) {
+		if(!passengersWaiting.contains(p)) {
+			passengersWaiting.add(p);
+		}
 		lock.lock();
 		try {	
-			if(bus.addPassenger(P)) {
+			while(!bus.hasSpace() || passengersWaiting.peek() != p) {
+				passengerWait.await();
+			}
+			
+			if(bus.addPassenger(passengersWaiting.poll())) {
 				if(!bus.hasSpace()) {
 					busFull.signal();
 				}
 				return true;
 			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}finally {
 			lock.unlock();
 		}
@@ -39,24 +61,50 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 			
 	}
 	
-	public void BusNotFull() {
+	
+	
+	public void dayWordEnd() {
 		lock.lock();
 		try {
-			while(bus.hasSpace()) {
+			this.dayWorkEnd = true;
+			busFull.signal();
+		}finally {
+			lock.unlock();
+		}
+		
+	}
+	
+	public boolean BusNotFull() {
+		
+		lock.lock();
+		try {
+			while(bus.hasSpace() && !this.dayWorkEnd) {
+				
 				busFull.await();
 			}
+			if(!bus.hasSpace()) {
+				
+				return false;
+			}
+			
 		}catch(InterruptedException e) {
 			e.printStackTrace();
 		}finally {
 			lock.unlock();
 		}
+		return true;
 	}
 
-	public void hasDaysWorkEnded(BusDriver BD) {
-
+	public boolean hasDaysWorkEnded() {
+		return this.dayWorkEnd;	
 	}
 	
 	public void announcingBusBoarding() {
-		
+		lock.lock();
+		try {
+			passengerWait.signalAll();
+		}finally {
+			lock.unlock();
+		}
 	}
 }
