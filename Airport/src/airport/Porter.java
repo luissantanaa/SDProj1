@@ -23,6 +23,7 @@ public class Porter extends Thread{
 		this.tempstoragemonitor = tempstoragemonitor;
 		this.state = StatesPorter.WAITING_FOR_A_PLANE_TO_LAND;
 		this.logger = logger;
+		
 	}
 	public Bag getB() {
 		return b;
@@ -54,29 +55,41 @@ public class Porter extends Thread{
 		return s;
 
 	}
+	public boolean isStateFinal() {
+		return end;
+	}
+	public void endThread(){
+        end = true;
+
+    }
 	
 	
 	public void run() {
-		while(!end){
+		while(!isStateFinal()){
 			switch(this.state) {
 				case WAITING_FOR_A_PLANE_TO_LAND:
+					if(arrivalmonitor.itWasLast()) {
+						endThread();
+					}
 					if(arrivalmonitor.takeARest()){
-						logger.toPrint();
 						this.tryToCollectABag();
+						logger.toPrint();
 					}
 					break;
 				case AT_THE_PLANES_HOLD:
 			
 					this.b = this.arrivalmonitor.collectBag();
 					if(this.b == null) {
-						
+						this.baggageCollectPointMonitor.noMoreBags();
 						this.noMoreBagsToCollect();
 					}else {
 						if(this.b.isDest()) {
 							this.carryItToAppropriateStore(StatesPorter.AT_THE_LUGGAGE_BELT_CONVEYOR);
-							this.baggageCollectPointMonitor.addBag(this.b);
-							logger.incrementCB();
-							logger.toPrint();
+							
+							if(this.baggageCollectPointMonitor.addBag(this.b)) {
+								logger.incrementCB();
+								logger.toPrint();
+							}
 							
 						}else {
 							this.carryItToAppropriateStore(StatesPorter.AT_THE_STOREROOM);
@@ -108,12 +121,10 @@ public class Porter extends Thread{
 		this.state = state;
 	}
 
-	public void endThread(){
-        end = true;
-    }
 	
 	public void noMoreBagsToCollect() {
 		this.state = StatesPorter.WAITING_FOR_A_PLANE_TO_LAND;
+		logger.toPrint();
 	}
 	
 }

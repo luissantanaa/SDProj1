@@ -5,4 +5,5 @@ import airport.Bag;
 public interface ArrivalLoungeInterfacePorter {
 	public boolean takeARest();
 	public Bag collectBag();
+	 public boolean itWasLast();
 }

@@ -15,6 +15,7 @@ public class Logger{
     private final ReentrantLock lock = new ReentrantLock();
     int CB=0;
     int CR=0;
+    int lBags = 0;
     
     volatile boolean end = false;
     public Logger(){
@@ -74,6 +75,15 @@ public class Logger{
     	
     	
     }
+    
+    
+    public void finalPrint() {
+    	System.out.print("\n\nFinal report\r\n" + 
+    			"N. of passengers which have this airport as their final destination = ##\r\n" + 
+    			"N. of passengers in transit = ##\r\n" + 
+    			"N. of bags that should have been transported in the the planes hold = ##\r\n" + 
+    			"N. of bags that were lost ="+ lBags);
+    }
     public void resetPassenger() {
     	passenger.clear();
     }
@@ -83,6 +93,9 @@ public class Logger{
     }
     public void decrementCB() {
     	CB--;
+    }
+    public void incrementLost() {
+    	lBags++;
     }
     
 	public void incrementCR() {

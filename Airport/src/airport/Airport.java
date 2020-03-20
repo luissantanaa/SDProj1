@@ -90,14 +90,15 @@ public class Airport {
 			(TempStorageInterfacePorter) tempstoragearea);
 			
 
+		log.setBusDriver(BD);
+		log.setPorter(porter);
+	
 			porter.start();
-			BD.start();
+			//BD.start();
 
-			log.setBusDriver(BD);
-			log.setPorter(porter);
-		
 		for(int n=0; n<nPlanes;n++){
 			arrivalmonitor.setPlane(planes[n]);
+			baggagecollectpoint.moreBags();
 			int i=0;
 			log.setPlane(planes[n]);
 			while(!planes[n].isEmpty()) {
@@ -115,12 +116,15 @@ public class Airport {
 					e.printStackTrace();
 				}
 			}
+			
+			
 			log.resetPassenger();
 		}
-
-		BD.endThread();
-		porter.endThread();
-
+		arrivalmonitor.lastFlight();
+		
+		
+		log.finalPrint();
+		
 	}
 
 } 

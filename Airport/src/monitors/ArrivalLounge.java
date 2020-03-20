@@ -16,6 +16,7 @@ import states.StatesPerson;
 public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLoungeInterfacePorter{
 	private final ReentrantLock lock = new ReentrantLock();
 	private final Condition porterc = lock.newCondition(); 
+	private boolean lastF;
 	Plane plane;
 	int size;
 	Logger logger;
@@ -31,7 +32,22 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	}
 	public ArrivalLounge(Logger logger){
 		size = 0;
+		 lastF = false;
 		this.logger = logger;
+	}
+	public void lastFlight() {
+		lock.lock();
+		try {
+			lastF = true;
+			//size=6;
+		}finally {
+			porterc.signal();
+			lock.unlock();
+		}
+	
+	}
+	public boolean itWasLast() {
+		return lastF;
 	}
 	public StatesPerson whatShouldIDo(List<Bag> bag, boolean dest) {
 		
@@ -52,7 +68,6 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 			
 			size++;
 			if(size==6) {
-				
 				porterc.signal();
 			}
 			lock.unlock();
@@ -62,10 +77,9 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	public boolean takeARest() {
 		lock.lock();
 		try {	
-			while(plane==null || size!=6) {
+			while( (size!=6 && !lastF) || (plane.getBags().size()==0 && !lastF)) {
 				porterc.await();
 			}
-			size=0;
 			if(plane.getBags().size()>0) {
 				return true;
 			}

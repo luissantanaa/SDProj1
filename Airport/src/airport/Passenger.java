@@ -172,7 +172,6 @@ public class Passenger extends Thread{
 					
 					// Retorna o estado dependendo se tem malas e se chegou ao seu destino
 					this.state=arrivalmonitor.whatShouldIDo(this.b, this.dest);
-					
 					logger.toPrint();
 					break;
 					
@@ -184,10 +183,13 @@ public class Passenger extends Thread{
 							this.bagCollected++;
 							logger.decrementCB();
 							logger.toPrint();
+						}else {
+							logger.incrementLost();
 						}
 					}
 					
 					if(this.bagCollected==b.size()) { // verifica se � possivel recolher a mala
+						
 						goHome(); // vai para casa
 					}else {
 						reportMissingBag(); // reportar mala perdida
