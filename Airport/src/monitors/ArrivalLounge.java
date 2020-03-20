@@ -54,6 +54,7 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		lock.lock();
 		try {
 			if(dest) {
+				logger.incPassDest();
 				if(bag.isEmpty()) {
 					return StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
 					
@@ -61,6 +62,7 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 				return StatesPerson.AT_THE_LUGGAGE_COLLECTION_POINT;
 				
 			}else {
+				logger.incPassTransit();
 				return StatesPerson.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
 			}
 			

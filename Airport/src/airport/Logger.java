@@ -13,9 +13,12 @@ public class Logger{
     BusDriver busdriver;
     List <Passenger> passenger;
     private final ReentrantLock lock = new ReentrantLock();
-    int CB=0;
-    int CR=0;
-    int lBags = 0;
+    
+    private int PassDest = 0;
+    private int PassTransit = 0;
+    private int CB=0;
+    private int CR=0;
+    private int lBags = 0;
     
     volatile boolean end = false;
     public Logger(){
@@ -25,7 +28,7 @@ public class Logger{
     
     public void printInit() {
     	
-    	System.out.print("IRPORT RHAPSODY - Description of the internal state of the problem\r\n" + 
+    	System.out.print("AIRPORT RHAPSODY - Description of the internal state of the problem\r\n" + 
     			"\r\n" + 
     			"PLANE    PORTER                  DRIVER\r\n" + 
     			"FN BN  Stat CB SR   Stat  Q1 Q2 Q3 Q4 Q5 Q6  S1 S2 S3\r\n" + 
@@ -79,11 +82,20 @@ public class Logger{
     
     public void finalPrint() {
     	System.out.print("\n\nFinal report\r\n" + 
-    			"N. of passengers which have this airport as their final destination = ##\r\n" + 
-    			"N. of passengers in transit = ##\r\n" + 
+    			"N. of passengers which have this airport as their final destination = " + PassDest + "\r\n" + 
+    			"N. of passengers in transit = " + PassTransit + "\r\n" + 
     			"N. of bags that should have been transported in the the planes hold = ##\r\n" + 
-    			"N. of bags that were lost ="+ lBags);
+    			"N. of bags that were lost = "+ lBags);
     }
+    
+    public void incPassDest() {
+    	PassDest++;
+    }
+    
+    public void incPassTransit() {
+    	PassTransit++;
+    }
+    
     public void resetPassenger() {
     	passenger.clear();
     }
