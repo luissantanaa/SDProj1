@@ -1,12 +1,16 @@
 package airport;
 
+import Interfaces.DepartureTransTermBDriverInterface;
+import monitors.DepartureTransTerm;
 import states.StatesBusD;
 
 public class BusDriver extends Thread{
-	StatesBusD state;
+	private StatesBusD state;
 	volatile boolean end = false;
-	public BusDriver() {
+	private DepartureTransTermBDriverInterface departuretransmonitor;
+	public BusDriver(DepartureTransTermBDriverInterface departuretransmonitor) {
 		super();
+		this.departuretransmonitor = departuretransmonitor;
 		this.state =  StatesBusD.PARKING_AT_THE_ARRIVAL_TERMINAL;
 	}
 	public StatesBusD getStates() {
@@ -28,7 +32,7 @@ public class BusDriver extends Thread{
 					break;
 				
 				case PARKING_AT_THE_DEPARTURE_TERMINAL:
-					//faltam cenas
+					this.departuretransmonitor.waitForPassengers();
 					this.goToArrivalTerminal();	
 					break;
 									

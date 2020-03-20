@@ -2,6 +2,6 @@ package Interfaces;
 
 import airport.Passenger;
 
-public interface DepartureArrivalTermPassengerInterface {
+public interface DepartureTransTermPassengerInterface {
 	public void leaveTheBus(Passenger P) ;
 }

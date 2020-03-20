@@ -33,10 +33,10 @@ public class Airport {
 		BaggageCollectPoint baggagecollectpoint = new BaggageCollectPoint(log);
 		ArrivalTransferTerm arrivaltransferterm = new ArrivalTransferTerm(bus,log);
 		BaggageReclaimOffice baggagereclaimoffice = new BaggageReclaimOffice(log); 
-		DepartureArrivalTerm  departurearrivalterm = new  DepartureArrivalTerm(bus,log);
+		DepartureTransTerm  departurearrivalterm = new  DepartureTransTerm(bus,log);
 		DepartureTermEntr departuretermentr = new DepartureTermEntr();
 		TempStorageArea tempstoragearea = new TempStorageArea(log);
-		
+		DepartureTransTerm departuretransterm = new DepartureTransTerm(bus,log); 
 		//ArrivalTermExit arrivaltermexit = new ArrivalTermExit();
 
 		//Resources 
@@ -44,7 +44,7 @@ public class Airport {
 		
 		
 		//BusDriver
-		BusDriver BD = new BusDriver();
+		BusDriver BD = new BusDriver( (DepartureTransTermBDriverInterface) departuretransterm);
 		
 
 		//Passenger
@@ -59,14 +59,14 @@ public class Airport {
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
-							(DepartureArrivalTermPassengerInterface) departurearrivalterm,
+							(DepartureTransTermPassengerInterface) departurearrivalterm,
 							(DepartureTermEntrancePassengerInterface) departuretermentr);
 				}else{
 						passengers[n][i] = new Passenger(log,6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
-							(DepartureArrivalTermPassengerInterface) departurearrivalterm,
+							(DepartureTransTermPassengerInterface) departurearrivalterm,
 							(DepartureTermEntrancePassengerInterface) departuretermentr);
 				}
 				int nBags = new Random().nextInt(3);

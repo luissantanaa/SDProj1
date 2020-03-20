@@ -6,7 +6,7 @@ import Interfaces.ArrivalLoungeInterfacePassenger;
 import Interfaces.ArrivalTransferTermPassengerInterface;
 import Interfaces.BaggageCollectPointPassengerInterface;
 import Interfaces.BaggageReclaimOfficePassengerInterface;
-import Interfaces.DepartureArrivalTermPassengerInterface;
+import Interfaces.DepartureTransTermPassengerInterface;
 import Interfaces.DepartureTermEntrancePassengerInterface;
 import states.StatesPerson;
 public class Passenger extends Thread{
@@ -21,7 +21,7 @@ public class Passenger extends Thread{
 	private BaggageCollectPointPassengerInterface baggagecollectpoint;
 	private ArrivalTransferTermPassengerInterface arrivaltransfertermPassengerinterface;
 	private BaggageReclaimOfficePassengerInterface baggageReclaimofficepassengerinterface;
-	private DepartureArrivalTermPassengerInterface departurearrivaltermpassengerinterface;
+	private DepartureTransTermPassengerInterface departurearrivaltermpassengerinterface;
 	private DepartureTermEntrancePassengerInterface departuretermentrancepassengerinterface;
 	
 	
@@ -40,7 +40,7 @@ public class Passenger extends Thread{
 			         BaggageCollectPointPassengerInterface baggagecollectpoint,
 			         ArrivalTransferTermPassengerInterface arrivaltransfertermPassengerinterface,
 			         BaggageReclaimOfficePassengerInterface baggageReclaimofficepassengerinterface,
-			         DepartureArrivalTermPassengerInterface departurearrivaltermpassengerinterface,
+			         DepartureTransTermPassengerInterface departurearrivaltermpassengerinterface,
 			         DepartureTermEntrancePassengerInterface departuretermentrancepassengerinterface) {
 		
 		this.id = id;
@@ -66,7 +66,7 @@ public class Passenger extends Thread{
 			         BaggageCollectPointPassengerInterface baggagecollectpoint,
 			         ArrivalTransferTermPassengerInterface arrivaltransfertermPassengerinterface,
 			         BaggageReclaimOfficePassengerInterface baggageReclaimofficepassengerinterface,
-			         DepartureArrivalTermPassengerInterface departurearrivaltermpassengerinterface,
+			         DepartureTransTermPassengerInterface departurearrivaltermpassengerinterface,
 			         DepartureTermEntrancePassengerInterface departuretermentrancepassengerinterface) {
 		
 		this.id = id;

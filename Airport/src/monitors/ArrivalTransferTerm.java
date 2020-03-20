@@ -1,5 +1,6 @@
 package monitors;
 
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import Interfaces.ArrivalTransferTermPassengerInterface;
@@ -10,6 +11,7 @@ import airport.Passenger;
 
 public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterface{
 	private final ReentrantLock lock = new ReentrantLock();
+	private final Condition busFull = lock.newCondition();
 	private Bus bus;
 	private Logger logger;
 	
@@ -26,7 +28,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		try {	
 			if(bus.addPassenger(P)) {
 				if(!bus.hasSpace()) {
-					//notify bus driver
+					busFull.signal();
 				}
 				return true;
 			}
@@ -35,7 +37,19 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		}
 		return false;
 			
+	}
 	
+	public void BusNotFull() {
+		lock.lock();
+		try {
+			while(bus.hasSpace()) {
+				busFull.await();
+			}
+		}catch(InterruptedException e) {
+			e.printStackTrace();
+		}finally {
+			lock.unlock();
+		}
 	}
 
 	public void hasDaysWorkEnded(BusDriver BD) {
