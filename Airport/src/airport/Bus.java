@@ -39,4 +39,25 @@ public class Bus {
 		return false;
 	}
 	
+	public String toPrint() {
+		String s = "";
+		switch(passengers.size()) {
+			case 0:
+				s = " - - - ";
+				break;
+			case 1:
+				s = " "+ this.passengers.get(0).getPId() + " - - ";
+				break;
+			case 2:
+				s = " "+ this.passengers.get(0).getPId() +" "+this.passengers.get(1).getPId()+ " - ";
+				break;
+			case 3:
+				s = " "+ this.passengers.get(0).getPId() + " " + this.passengers.get(1).getPId() +" "+ this.passengers.get(2).getPId();
+				break;
+			default:
+				
+		}
+		return s;
+	}
+	
 }

@@ -160,8 +160,12 @@ public class Passenger extends Thread{
 				s = s + "EAT";	
 		}
 		
+		if(this.dest) {
+			s = s + " FDT " + this.b.size() + " " + this.bagCollected + " "; 
+		}else {
+			s = s + " TRT " + this.b.size() + " " + this.bagCollected + " "; 
+		}
 		
-		s = s + " --- " + this.b.size() + " " + this.bagCollected + " "; 
 		return s;
 	}
 	// Maquina de Estados
@@ -212,10 +216,12 @@ public class Passenger extends Thread{
 					break;
 				case TERMINAL_TRANSFER:
 					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
+
+					if(departurearrivaltermpassengerinterface.leaveTheBus(this)) { // sair do autocarro
+						
+						leaveTheBus();
+					}
 				
-					departurearrivaltermpassengerinterface.leaveTheBus(this); // sair do autocarro
-					
-					leaveTheBus();
 					break;
 					
 				case AT_THE_DEPARTURE_TRANSFER_TERMINAL:

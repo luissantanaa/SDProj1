@@ -8,10 +8,14 @@ import java.util.concurrent.locks.ReentrantLock;
 import states.StatesPerson;
 
 public class Logger{
-    Porter porter;
-    Plane plane;
-    BusDriver busdriver;
-    List <Passenger> passenger;
+	private Porter porter;
+	private Plane plane;
+	private BusDriver busdriver;
+	private List <Passenger> passenger;
+	private Bus bus;
+	private List <Passenger> passengerWaiting;
+	
+	
     private final ReentrantLock lock = new ReentrantLock();
     
     private int BagSize = 0;
@@ -25,8 +29,12 @@ public class Logger{
     public Logger(){
         this.plane = null;
         this.passenger = new ArrayList<Passenger>();
+        this.passengerWaiting = new ArrayList<Passenger>();
     }
     
+    public void setBus(Bus bus) {
+    	this.bus = bus;
+    }
     public void printInit() {
     	
     	System.out.print("AIRPORT RHAPSODY - Description of the internal state of the problem\r\n" + 
@@ -41,7 +49,7 @@ public class Logger{
     	lock.lock();
 		try {
 				System.out.println(plane.getPlaneId() + " " + plane.getBags().size()+"  	"
-						+ porter.getString() + " " + CB + " " + CR + " " + "--- " + busdriver.getString());
+						+ porter.getString() + " " + CB + " " + CR + "	"+ busdriver.getString() +"	"+printWait()+"	" +bus.toPrint());
 				
 				for(int i = 0; i<6; i++) {
 					if(passenger.size()>i) {
@@ -80,6 +88,42 @@ public class Logger{
     	
     }
     
+    
+    public void addPassengersWaiting(Passenger p) {
+    	lock.lock();
+		try {
+			passengerWaiting.add(p);
+		}finally {
+			lock.unlock();
+		}	
+    	
+    	
+    }
+    
+    
+    public void removePassengersWaiting(Passenger p) {
+    	lock.lock();
+		try {
+			passengerWaiting.remove(p);
+		}finally {
+			lock.unlock();
+		}	
+    	
+    	
+    }
+    
+    
+    public String printWait() {
+    	String s = "";
+    	for(int i=0; i<6; i++) {
+    		if(i<passengerWaiting.size()) {
+    			s += " " + passengerWaiting.get(i).getPId();
+    		}else {
+    			s += " -";
+    		}
+    	}
+    	return s;
+    }
     
     public void finalPrint() {
     	System.out.print("\n\nFinal report\r\n" + 

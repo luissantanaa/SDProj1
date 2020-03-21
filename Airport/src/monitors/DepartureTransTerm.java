@@ -12,31 +12,36 @@ import airport.Passenger;
 public class DepartureTransTerm implements DepartureTransTermPassengerInterface,DepartureTransTermBDriverInterface{
 	private final ReentrantLock lock = new ReentrantLock();
 	private final Condition busEmpty = lock.newCondition();
-	//private final Condition waitToArrive = lock.newCondition();
+	private final Condition waitToArrive = lock.newCondition();
 	
 	
-	private boolean arrive;
+	private boolean arrive=false;
 	private Bus bus;
 	Logger logger;
 	
 	public DepartureTransTerm(Bus bus, Logger logger) {
 		this.bus = bus;
 		this.logger = logger;
-		this.arrive = false;
 	}
 
-	public void leaveTheBus(Passenger P) {
+	public boolean leaveTheBus(Passenger P) {
 	
 		lock.lock();
 		try {
 			
-		/*while(arrive) {
-				
+			while(!this.arrive) {
 				waitToArrive.await();
 			}
-			*/
-			bus.removePassenger(P);	
+			if(arrive) {
+				
+				bus.removePassenger(P);	
+				return true;
+			}
+			
 		
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}finally {
 			if(bus.PassengerSize() == 0) {
 				busEmpty.signal();
@@ -44,22 +49,23 @@ public class DepartureTransTerm implements DepartureTransTermPassengerInterface,
 			}
 			lock.unlock();
 		}
+		return false;
 	}
 	
 	
 	public void arriveDepTransTerm() {
 		lock.lock();
 		try {
-			this.arrive = true;
 			
+			this.arrive = true;
 		}finally {
-			//waitToArrive.signalAll();
+			
+			waitToArrive.signalAll();
 			lock.unlock();
 		}
 	}
 	
 	public void leaveDepTransTerm() {
-		
 		this.arrive = false;
 	}
 	
@@ -72,6 +78,8 @@ public class DepartureTransTerm implements DepartureTransTermPassengerInterface,
 			}
 			//System.out.print("\n\n\n indo em frente \n\n\n");
 			leaveDepTransTerm();
+			
+
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

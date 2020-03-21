@@ -47,7 +47,6 @@ public class BusDriver extends Thread{
 		default:
 		}
 	
-		s = s + " --- " + "" + " " + "" + " "; 
 		//System.out.println("\n\n\n " + s + "\n\n\n");
 		return s;
 	}
@@ -62,7 +61,6 @@ public class BusDriver extends Thread{
 						//System.out.println("\n\n\nif1 " + this.state);
 						if(!arrivaltranferterm.BusNotFull()) {
 							//System.out.println("\n\n\nif2 " + this.state);
-							arrivaltranferterm.announcingBusBoarding();
 							this.goToDepartureTerminal();
 						}
 					}else {

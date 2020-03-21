@@ -40,20 +40,26 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 			//System.out.println("\n\n\nenterTheBus" + p.getId() +"\n\n\n");
 			
 			passengersWaiting.add(p);
+			logger.addPassengersWaiting(p);
 		}
 		lock.lock();
 		try {	
-			while(!bus.hasSpace() || passengersWaiting.peek() != p) {
+			while(!bus.hasSpace()) {
 				//System.out.println("\n\n\nenterTheBus" + p.getId() +"\n\n\n");
 				passengerWait.await();
 			}
-			
-			if(bus.addPassenger(passengersWaiting.poll())) {
-				if(!bus.hasSpace()) {
-					busFull.signal();
+			if(passengersWaiting.peek() == p) {
+				if(bus.addPassenger(passengersWaiting.poll())) {
+					
+					logger.removePassengersWaiting(p);
+					if(!bus.hasSpace()) {
+						
+						busFull.signal();
+					}
+					return true;
 				}
-				return true;
 			}
+			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,7 +92,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 				busFull.await();
 			}
 			if(!bus.hasSpace()) {
-				
+			
 				return false;
 			}
 			

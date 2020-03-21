@@ -25,7 +25,7 @@ public class Airport {
 		log.printInit();
 				
 		//BUS
-		Bus bus = new Bus(2);
+		Bus bus = new Bus(1);
 
 
 		//Monitors
@@ -36,7 +36,7 @@ public class Airport {
 		DepartureTransTerm  departurearrivalterm = new  DepartureTransTerm(bus,log);
 		DepartureTermEntr departuretermentr = new DepartureTermEntr();
 		TempStorageArea tempstoragearea = new TempStorageArea(log);
-		DepartureTransTerm departuretransterm = new DepartureTransTerm(bus,log); 
+ 
 		//ArrivalTermExit arrivaltermexit = new ArrivalTermExit();
 
 		//Resources 
@@ -44,7 +44,7 @@ public class Airport {
 		
 		
 		//BusDriver
-		BusDriver BD = new BusDriver( (DepartureTransTermBDriverInterface) departuretransterm,
+		BusDriver BD = new BusDriver( (DepartureTransTermBDriverInterface) departurearrivalterm,
 									(ArrivalTransferTermBDriverInterface) arrivaltransferterm, log);
 		
 
@@ -93,6 +93,7 @@ public class Airport {
 
 		log.setBusDriver(BD);
 		log.setPorter(porter);
+		log.setBus(bus);
 	
 		porter.start();
 		BD.start();
@@ -107,6 +108,9 @@ public class Airport {
 				//log.addPassengers(p);
 				p.start();
 			}
+			
+			
+			
 			
 			for(int y=0;y<nPassengers;y++){
 				try {
@@ -126,11 +130,13 @@ public class Airport {
 		
 		try {
 			porter.join();
-			//BD.join();
+			BD.join();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
 		
 		log.finalPrint();
 	}
