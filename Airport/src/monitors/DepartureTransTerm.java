@@ -70,7 +70,7 @@ public class DepartureTransTerm implements DepartureTransTermPassengerInterface,
 				
 				busEmpty.await();
 			}
-			System.out.print("\n\n\n indo em frente \n\n\n");
+			//System.out.print("\n\n\n indo em frente \n\n\n");
 			leaveDepTransTerm();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

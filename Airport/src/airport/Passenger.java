@@ -134,7 +134,7 @@ public class Passenger extends Thread{
 	}
 	
 	public String getString() {
-			String s="";
+		String s="";
 		switch(this.state) {
 			case AT_THE_DISEMBARKING_ZONE:
 				s = s + "WSD";

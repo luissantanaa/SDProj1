@@ -29,35 +29,70 @@ public class BusDriver extends Thread{
 		this.state = state;
 	}
 	
+	public String getString() {
+		String s="";
+	switch(this.state) {
+		case PARKING_AT_THE_ARRIVAL_TERMINAL:
+			s = s + "PKAT";
+			break;
+		case DRIVING_FORWARD:
+			s = s + "DRFW";
+			break;
+		case PARKING_AT_THE_DEPARTURE_TERMINAL:
+			s = s + "PKDT";
+			break;
+		case DRIVING_BACKWARD:
+			s = s + "DRBW";
+			break;
+		default:
+		}
+	
+		s = s + " --- " + "" + " " + "" + " "; 
+		//System.out.println("\n\n\n " + s + "\n\n\n");
+		return s;
+	}
+	
 	public void run() {
 		while(!end) {
 			switch(this.state) {
 				case PARKING_AT_THE_ARRIVAL_TERMINAL:
-					//faltam cenas
+					logger.toPrint();
+					//System.out.println(this.state);
 					if(!arrivaltranferterm.hasDaysWorkEnded()) {
+						//System.out.println("\n\n\nif1 " + this.state);
 						if(!arrivaltranferterm.BusNotFull()) {
-							
+							//System.out.println("\n\n\nif2 " + this.state);
+							arrivaltranferterm.announcingBusBoarding();
 							this.goToDepartureTerminal();
 						}
 					}else {
+						//System.out.println("\n\n\nelse " + this.state);
 						endThread();
 					}
 					
 					break;
 				case DRIVING_FORWARD:
-				
+					logger.toPrint();
+					//System.out.println("\n\n\n" +this.state);
 					this.parkTheBusAndLetPassOff();
 					break;
 				
 				case PARKING_AT_THE_DEPARTURE_TERMINAL:
+					logger.toPrint();
+					//System.out.println("\n\n\nif1 " + this.state);
 					this.departuretransmonitor.arriveDepTransTerm();
+					//System.out.println("\n\n\nif2 " + this.state);
 					this.departuretransmonitor.waitForPassengers();
+					//System.out.println("\n\n\nif3 " + this.state);
 					this.goToArrivalTerminal();	
-					
+					//System.out.println("\n\n\nif4 " + this.state);
 					break;
 									
 				case DRIVING_BACKWARD:
+					logger.toPrint();
+					//System.out.println("\n\n\nif1 " + this.state);
 					this.parkTheBus();
+					//System.out.println("\n\n\nif2 " + this.state);
 					break;
 					
 				default:

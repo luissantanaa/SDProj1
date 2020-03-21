@@ -25,7 +25,7 @@ public class Airport {
 		log.printInit();
 				
 		//BUS
-		Bus bus = new Bus(1);
+		Bus bus = new Bus(2);
 
 
 		//Monitors
@@ -56,7 +56,7 @@ public class Airport {
 			for(int i=0;i<nPassengers;i++){
 				int rand = new Random().nextInt(4);
 				if(rand==0){
-						passengers[n][i] =  new Passenger(log, 6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+						passengers[n][i] =  new Passenger(log, 6*n+i,null,false,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
@@ -94,8 +94,8 @@ public class Airport {
 		log.setBusDriver(BD);
 		log.setPorter(porter);
 	
-			porter.start();
-			//BD.start();
+		porter.start();
+		BD.start();
 
 		for(int n=0; n<nPlanes;n++){
 			arrivalmonitor.setPlane(planes[n]);
@@ -126,13 +126,13 @@ public class Airport {
 		
 		try {
 			porter.join();
+			//BD.join();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		log.finalPrint();
-		
 	}
 
 } 

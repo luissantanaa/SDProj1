@@ -41,7 +41,7 @@ public class Logger{
     	lock.lock();
 		try {
 				System.out.println(plane.getPlaneId() + " " + plane.getBags().size()+"  	"
-						+ porter.getString() + " " + CB + " " + CR + "");
+						+ porter.getString() + " " + CB + " " + CR + " " + "--- " + busdriver.getString());
 				
 				for(int i = 0; i<6; i++) {
 					if(passenger.size()>i) {

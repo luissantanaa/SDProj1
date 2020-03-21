@@ -37,11 +37,14 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	public boolean enterTheBus(Passenger p) {
 		if(!passengersWaiting.contains(p)) {
+			//System.out.println("\n\n\nenterTheBus" + p.getId() +"\n\n\n");
+			
 			passengersWaiting.add(p);
 		}
 		lock.lock();
 		try {	
 			while(!bus.hasSpace() || passengersWaiting.peek() != p) {
+				//System.out.println("\n\n\nenterTheBus" + p.getId() +"\n\n\n");
 				passengerWait.await();
 			}
 			
@@ -102,6 +105,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	public void announcingBusBoarding() {
 		lock.lock();
 		try {
+			//System.out.println("\n\n\n Bus Boarding\n\n\n");
 			passengerWait.signalAll();
 		}finally {
 			lock.unlock();
