@@ -24,6 +24,10 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	private boolean dayWorkEnd;
 	private Queue<Passenger> passengersWaiting;
 	
+	private boolean lastPass = false;
+	private boolean driverLeft = false;
+	
+	
 	
 	public ArrivalTransferTerm(Bus bus, Logger logger) {
 		this.bus = bus;
@@ -34,31 +38,51 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	
 	
-	
-	public boolean enterTheBus(Passenger p) {
-		if(!passengersWaiting.contains(p)) {
-			//System.out.println("\n\n\nenterTheBus" + p.getId() +"\n\n\n");
-			
-			passengersWaiting.add(p);
-			logger.addPassengersWaiting(p);
-		}
+	public void wakeUpDriver() {
 		lock.lock();
 		try {	
-			while(!bus.hasSpace()) {
-				//System.out.println("\n\n\nenterTheBus" + p.getId() +"\n\n\n");
+			
+		}finally {
+			busFull.signal();
+			lock.unlock();
+		}
+	}
+	
+	
+	
+	public boolean enterTheBus(Passenger p) {
+		
+		lock.lock();
+		try {	
+			// ADD to queueu
+			if(!passengersWaiting.contains(p)) {
+				passengersWaiting.add(p);
+				logger.addPassengersWaiting(p);
+				logger.toPrint();
+			}
+			
+			// IF its a 3 passenger wake up driver
+			if(passengersWaiting.size()>=3 && !driverLeft) {
+				wakeUpDriver();
+			}
+			
+			//if doesn have space wait
+			while(!bus.hasSpace() ) {
 				passengerWait.await();
 			}
+			
+			// if it the first one on queueu enter the bus
 			if(passengersWaiting.peek() == p) {
 				if(bus.addPassenger(passengersWaiting.poll())) {
 					
 					logger.removePassengersWaiting(p);
 					if(!bus.hasSpace()) {
-						
 						busFull.signal();
 					}
 					return true;
 				}
 			}
+			
 			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -72,6 +96,16 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	
 	
+	public void LastPassenger() {
+		lock.lock();
+		try {	
+			lastPass = true;
+		}finally {
+			busFull.signal();
+			lock.unlock();
+		}
+	}
+	
 	public void dayWordEnd() {
 		lock.lock();
 		try {
@@ -80,21 +114,18 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		}finally {
 			lock.unlock();
 		}
-		
 	}
 	
 	public boolean BusNotFull() {
 		
 		lock.lock();
 		try {
-			while(bus.hasSpace() && !this.dayWorkEnd) {
-				
+			while((bus.hasSpace() && !this.dayWorkEnd) && (!lastPass && !this.dayWorkEnd)) {	
 				busFull.await();
 			}
-			if(!bus.hasSpace()) {
-			
+		
+				driverLeft = true;
 				return false;
-			}
 			
 		}catch(InterruptedException e) {
 			e.printStackTrace();
@@ -104,14 +135,19 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		return true;
 	}
 
+	
+	
 	public boolean hasDaysWorkEnded() {
 		return this.dayWorkEnd;	
 	}
 	
+	
+	
 	public void announcingBusBoarding() {
 		lock.lock();
 		try {
-			//System.out.println("\n\n\n Bus Boarding\n\n\n");
+			lastPass = false;
+			driverLeft = false;
 			passengerWait.signalAll();
 		}finally {
 			lock.unlock();

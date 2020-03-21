@@ -25,7 +25,7 @@ public class Airport {
 		log.printInit();
 				
 		//BUS
-		Bus bus = new Bus(1);
+		Bus bus = new Bus(3);
 
 
 		//Monitors
@@ -63,7 +63,7 @@ public class Airport {
 							(DepartureTransTermPassengerInterface) departurearrivalterm,
 							(DepartureTermEntrancePassengerInterface) departuretermentr);
 				}else{
-						passengers[n][i] = new Passenger(log,6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+						passengers[n][i] = new Passenger(log,6*n+i,null,false,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
@@ -113,6 +113,7 @@ public class Airport {
 			
 			
 			for(int y=0;y<nPassengers;y++){
+				
 				try {
 				
 					passengers[n][y].join();
@@ -120,6 +121,7 @@ public class Airport {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 			}
 			
 			
