@@ -93,6 +93,7 @@ public class Porter extends Thread{
 							
 						}else {
 							this.carryItToAppropriateStore(StatesPorter.AT_THE_STOREROOM);
+							logger.incrementCR();
 							logger.toPrint();
 							this.tempstoragemonitor.addBag(this.b);
 							

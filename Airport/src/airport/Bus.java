@@ -2,11 +2,16 @@ package airport;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class Bus {	
 	private List<Passenger> passengers;
 	private int maxPasse;
+	private final ReentrantLock lock = new ReentrantLock();
+	
+	
+	
 	public Bus(int MaxPasse) {
 		super();
 		this.maxPasse = MaxPasse;
@@ -25,16 +30,29 @@ public class Bus {
 		return this.passengers.size() != this.maxPasse; 
 	}
 	public boolean addPassenger(Passenger P) {
-		if (hasSpace()) {
-			this.passengers.add(P);
-			return true;
+		
+		lock.lock();
+		try {
+			
+			if (hasSpace()) {
+				this.passengers.add(P);
+				return true;
+			}
+		}finally {
+			lock.unlock();
 		}
+
 		return false;
 	}
 	public boolean removePassenger(Passenger P) {
-		if (passengers.contains(P)) {
-			this.passengers.remove(P);
-			return true;
+		lock.lock();
+		try {
+			if (passengers.contains(P)) {
+				this.passengers.remove(P);
+				return true;
+			}
+		}finally {
+			lock.unlock();
 		}
 		return false;
 	}

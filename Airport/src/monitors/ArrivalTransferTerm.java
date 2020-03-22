@@ -26,8 +26,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	private boolean lastPass = false;
 	private boolean driverLeft = false;
-	
-	
+	private boolean lestGo = false;
 	
 	public ArrivalTransferTerm(Bus bus, Logger logger) {
 		this.bus = bus;
@@ -36,17 +35,6 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		this.passengersWaiting = new LinkedList<Passenger>();
 	}
 	
-	
-	
-	public void wakeUpDriver() {
-		lock.lock();
-		try {	
-			
-		}finally {
-			busFull.signal();
-			lock.unlock();
-		}
-	}
 	
 	
 	
@@ -61,22 +49,28 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 				logger.toPrint();
 			}
 			
+		
 			// IF its a 3 passenger wake up driver
+			
 			if(passengersWaiting.size()>=3 && !driverLeft) {
-				wakeUpDriver();
+				lestGo = true;
+				busFull.signal();
+				passengerWait.signalAll();
 			}
 			
 			//if doesn have space wait
-			while(!bus.hasSpace() ) {
+			
+			while(!bus.hasSpace() || driverLeft || !lestGo) {
 				passengerWait.await();
+				
 			}
 			
 			// if it the first one on queueu enter the bus
 			if(passengersWaiting.peek() == p) {
 				if(bus.addPassenger(passengersWaiting.poll())) {
-					
 					logger.removePassengersWaiting(p);
 					if(!bus.hasSpace()) {
+						lestGo = false;
 						busFull.signal();
 					}
 					return true;
@@ -146,10 +140,16 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	public void announcingBusBoarding() {
 		lock.lock();
 		try {
+			
 			lastPass = false;
 			driverLeft = false;
-			passengerWait.signalAll();
+			
+			if(passengersWaiting.size()>=3 ) {
+				lestGo = true;
+			}
+			
 		}finally {
+			passengerWait.signalAll();
 			lock.unlock();
 		}
 	}

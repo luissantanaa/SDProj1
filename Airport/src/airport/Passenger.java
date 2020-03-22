@@ -258,10 +258,10 @@ public class Passenger extends Thread{
 	 }
 	public void leaveTheBus() {
 		 this.state= StatesPerson.AT_THE_DEPARTURE_TRANSFER_TERMINAL;
-		 logger.toPrint();
+		 //logger.toPrint();
 	 }
 	public void prepareNextLeg() {
 		 this.state= StatesPerson.ENTERING_THE_DEPARTURE_TERMINAL ;
-		 logger.toPrint();
+		// logger.toPrint();
 	 } 	
 }
