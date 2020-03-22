@@ -45,7 +45,8 @@ public class Airport {
 		
 		//BusDriver
 		BusDriver BD = new BusDriver( (DepartureTransTermBDriverInterface) departurearrivalterm,
-									(ArrivalTransferTermBDriverInterface) arrivaltransferterm, log);
+									(ArrivalTransferTermBDriverInterface) arrivaltransferterm,
+									(ArrivalLoungeInterfaceBDriver) arrivalmonitor, log);
 		
 
 		//Passenger
@@ -63,7 +64,7 @@ public class Airport {
 							(DepartureTransTermPassengerInterface) departurearrivalterm,
 							(DepartureTermEntrancePassengerInterface) departuretermentr);
 				}else{
-						passengers[n][i] = new Passenger(log,6*n+i,null,false,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+						passengers[n][i] = new Passenger(log,6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,

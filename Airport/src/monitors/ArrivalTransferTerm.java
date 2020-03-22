@@ -27,6 +27,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	private boolean lastPass = false;
 	private boolean driverLeft = false;
 	private boolean lestGo = false;
+	private int passNumber = 0;
 	
 	public ArrivalTransferTerm(Bus bus, Logger logger) {
 		this.bus = bus;
@@ -42,41 +43,52 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		
 		lock.lock();
 		try {	
-			// ADD to queueu
-			if(!passengersWaiting.contains(p)) {
-				passengersWaiting.add(p);
-				logger.addPassengersWaiting(p);
-				logger.toPrint();
-			}
-			
-		
-			// IF its a 3 passenger wake up driver
-			
-			if(passengersWaiting.size()>=3 && !driverLeft) {
-				lestGo = true;
-				busFull.signal();
-				passengerWait.signalAll();
-			}
-			
-			//if doesn have space wait
+
+				if(!passengersWaiting.contains(p)) {
+					passengersWaiting.add(p);
+					logger.addPassengersWaiting(p);
+					logger.toPrint();
+				}
+
 			
 			while(!bus.hasSpace() || driverLeft || !lestGo) {
-				passengerWait.await();
+				if(this.passNumber!=0 && passengersWaiting.size() >= this.passNumber) {
+					
+					lestGo=true;
+					break;
+				}else {
+					passengerWait.await();
+				}
 				
 			}
-			
+		
 			// if it the first one on queueu enter the bus
-			if(passengersWaiting.peek() == p) {
-				if(bus.addPassenger(passengersWaiting.poll())) {
-					logger.removePassengersWaiting(p);
-					if(!bus.hasSpace()) {
-						lestGo = false;
-						busFull.signal();
+			if(lestGo) {
+				
+				passengerWait.signalAll();	
+				if(passengersWaiting.peek() == p) {
+					
+					if(bus.addPassenger(passengersWaiting.poll())) {
+						
+						logger.removePassengersWaiting(p);
+						System.out.print("\n\n\n"+ passengersWaiting.size() + "\n");
+						if(!bus.hasSpace()) {
+							lestGo = false;
+							this.passNumber=0;
+							busFull.signal();
+							
+						}else if(passengersWaiting.size()== 0) {
+							this.passNumber=0;
+							lestGo = false;
+							lastPass = true;
+							busFull.signal();
+							
+						}
+						
+						return true;
 					}
-					return true;
 				}
 			}
-			
 			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -94,6 +106,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		lock.lock();
 		try {	
 			lastPass = true;
+			//System.out.print("\n\n\n GO \n\n\n");
 		}finally {
 			busFull.signal();
 			lock.unlock();
@@ -114,7 +127,8 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		
 		lock.lock();
 		try {
-			while((bus.hasSpace() && !this.dayWorkEnd) && (!lastPass && !this.dayWorkEnd)) {	
+			while(bus.hasSpace() && !this.dayWorkEnd && !lastPass ) {	
+				
 				busFull.await();
 			}
 		
@@ -137,16 +151,14 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	
 	
-	public void announcingBusBoarding() {
+	public void announcingBusBoarding(int passNumber) {
 		lock.lock();
 		try {
 			
+			this.passNumber = passNumber;
+			System.out.print("\n\n\nsignal Drivera BD "+this.passNumber+" \n\n\n");
 			lastPass = false;
 			driverLeft = false;
-			
-			if(passengersWaiting.size()>=3 ) {
-				lestGo = true;
-			}
 			
 		}finally {
 			passengerWait.signalAll();

@@ -203,8 +203,8 @@ public class Passenger extends Thread{
 					break;
 					
 				case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
-					
 					if(arrivaltransfertermPassengerinterface.enterTheBus(this)) { // verifica se � possivel entrar no autocarro
+						
 						enterTheBus(); // entrar no autocarro
 					}
 					break;
@@ -232,6 +232,7 @@ public class Passenger extends Thread{
 				default:
 			}
 		}
+
 	}
 	
 	

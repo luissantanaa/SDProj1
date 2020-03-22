@@ -1,5 +1,7 @@
 package airport;
 
+import Interfaces.ArrivalLoungeInterfaceBDriver;
+import Interfaces.ArrivalLoungeInterfacePorter;
 import Interfaces.ArrivalTransferTermBDriverInterface;
 import Interfaces.DepartureTransTermBDriverInterface;
 import monitors.DepartureTransTerm;
@@ -10,17 +12,20 @@ public class BusDriver extends Thread{
 	volatile boolean end = false;
 	private DepartureTransTermBDriverInterface departuretransmonitor;
 	private ArrivalTransferTermBDriverInterface arrivaltranferterm;
+	private ArrivalLoungeInterfaceBDriver arrivallounge;
 	private Logger logger;
 	
 	
 	public BusDriver(DepartureTransTermBDriverInterface departuretransmonitor,
 						ArrivalTransferTermBDriverInterface arrivaltranferterm,
+						ArrivalLoungeInterfaceBDriver arrivallounge,
 						Logger logger) {
 		super();
 		this.departuretransmonitor = departuretransmonitor;
 		this.state =  StatesBusD.PARKING_AT_THE_ARRIVAL_TERMINAL;
 		this.arrivaltranferterm = arrivaltranferterm;
 		this.logger = logger;
+		this.arrivallounge=arrivallounge;
 	}
 	public StatesBusD getStates() {
 		return state;
@@ -58,10 +63,17 @@ public class BusDriver extends Thread{
 					logger.toPrint();
 					//System.out.println(this.state);
 					if(!arrivaltranferterm.hasDaysWorkEnded()) {
-						//System.out.println("\n\n\nif1 " + this.state);
-						if(!arrivaltranferterm.BusNotFull()) {
-							//System.out.println("\n\n\nif2 " + this.state);
-							this.goToDepartureTerminal();
+						
+						
+						int numPass = arrivallounge.goCollectPassengers();
+						
+						if(numPass!=-1) {
+							arrivaltranferterm.announcingBusBoarding(numPass);
+							//System.out.println("\n\n\nif1 " + this.state);
+							if(!arrivaltranferterm.BusNotFull()) {
+								//System.out.println("\n\n\nif2 " + this.state);
+								this.goToDepartureTerminal();
+							}
 						}
 					}else {
 						//System.out.println("\n\n\nelse " + this.state);
@@ -87,7 +99,7 @@ public class BusDriver extends Thread{
 					break;
 									
 				case DRIVING_BACKWARD:
-					logger.toPrint();
+					//logger.toPrint();
 					//System.out.println("\n\n\nif1 " + this.state);
 					this.parkTheBus();
 					//System.out.println("\n\n\nif2 " + this.state);
@@ -108,7 +120,6 @@ public class BusDriver extends Thread{
 	}
 	public void parkTheBus() {
 		this.state = StatesBusD.PARKING_AT_THE_ARRIVAL_TERMINAL;
-		arrivaltranferterm.announcingBusBoarding();
 	}
 	public void goToDepartureTerminal() {
 		this.state = StatesBusD.DRIVING_FORWARD;

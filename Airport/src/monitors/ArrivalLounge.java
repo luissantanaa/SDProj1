@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import Interfaces.ArrivalLoungeInterfaceBDriver;
 import Interfaces.ArrivalLoungeInterfacePassenger;
 import Interfaces.ArrivalLoungeInterfacePorter;
 import airport.Bag;
@@ -13,14 +14,20 @@ import airport.Logger;
 import airport.Plane;
 import states.StatesPerson;
 
-public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLoungeInterfacePorter{
+public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLoungeInterfacePorter, ArrivalLoungeInterfaceBDriver{
 	private final ReentrantLock lock = new ReentrantLock();
 	private final Condition porterc = lock.newCondition(); 
-	private boolean lastF;
-	Plane plane;
-	int size;
-	Logger logger;
+	private final Condition busDriver = lock.newCondition(); 
 	
+	
+	private boolean lastF;
+	private Plane plane;
+	private int size;
+	private Logger logger;
+	private int sizeBus;
+	
+	
+
 	
 	public Plane getPlane() {
 		return plane;
@@ -29,26 +36,34 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		this.plane = plane;
 		this.logger.setBagSizes(this.getPlane().getBags().size());
 		size = 0;
+		sizeBus = 0;
 	}
 	public ArrivalLounge(Logger logger){
 		size = 0;
-		 lastF = false;
+		sizeBus = 0;
+		lastF = false;
 		this.logger = logger;
 	}
+	
+	
+	// Work day ended
 	public void lastFlight() {
 		lock.lock();
 		try {
 			lastF = true;
-			//size=6;
 		}finally {
 			porterc.signal();
 			lock.unlock();
 		}
 	
 	}
+	
+	
 	public boolean itWasLast() {
 		return lastF;
 	}
+	
+	
 	public StatesPerson whatShouldIDo(List<Bag> bag, boolean dest) {
 		
 		lock.lock();
@@ -66,11 +81,17 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 				return StatesPerson.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
 			}
 			
-		}finally {
-			
+		}finally {			
 			size++;
+			if(!dest) {
+				sizeBus ++;
+			}
+			
 			if(size==6) {
 				porterc.signal();
+				busDriver.signal();
+			}else if(sizeBus == 3) {
+					busDriver.signalAll();
 			}
 			lock.unlock();
 		}	
@@ -109,10 +130,32 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 			}
 			
 	}
+	
+	public int goCollectPassengers() {
+		lock.lock();
+		try {
+			while(sizeBus<3 && size<6) {
+				busDriver.await();
+			}	
+			
+			if(sizeBus>=3) {
+				System.out.print("\n\n\nsignal Drivera A "+ 3 +"\n\n\n");
+				sizeBus-=3;
+				return 3;
+			}else if(sizeBus!=0){
+				System.out.print("\n\n\nsignal Drivera A "+ sizeBus+"\n\n\n");
+				int sizeb = sizeBus;
+				sizeBus=0;
+				return sizeb;
+			}
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			lock.unlock();
+		}
+		return -1;
+	}
 
-}
-
-class Airplane{
-	int passengserSize;
-	int planeID;
 }
