@@ -1,10 +1,8 @@
 package airport;
 
 import Interfaces.ArrivalLoungeInterfaceBDriver;
-import Interfaces.ArrivalLoungeInterfacePorter;
 import Interfaces.ArrivalTransferTermBDriverInterface;
 import Interfaces.DepartureTransTermBDriverInterface;
-import monitors.DepartureTransTerm;
 import states.StatesBusD;
 
 public class BusDriver extends Thread{
@@ -51,8 +49,6 @@ public class BusDriver extends Thread{
 			break;
 		default:
 		}
-	
-		//System.out.println("\n\n\n " + s + "\n\n\n");
 		return s;
 	}
 	
@@ -61,50 +57,36 @@ public class BusDriver extends Thread{
 			switch(this.state) {
 				case PARKING_AT_THE_ARRIVAL_TERMINAL:
 					logger.toPrint();
-					//System.out.println(this.state);
 					if(!arrivaltranferterm.hasDaysWorkEnded()) {
-						
-						
 						int numPass = arrivallounge.goCollectPassengers();
-						
 						if(numPass!=-1) {
 							arrivaltranferterm.announcingBusBoarding(numPass);
-							//System.out.println("\n\n\nif1 " + this.state);
 							if(!arrivaltranferterm.BusNotFull()) {
-								//System.out.println("\n\n\nif2 " + this.state);
 								this.goToDepartureTerminal();
 							}
 						}
 					}else {
-						//System.out.println("\n\n\nelse " + this.state);
 						endThread();
 					}
 					
 					break;
 				case DRIVING_FORWARD:
 					logger.toPrint();
-					//System.out.println("\n\n\n" +this.state);
 					this.parkTheBusAndLetPassOff();
 					break;
 				
 				case PARKING_AT_THE_DEPARTURE_TERMINAL:
 					logger.toPrint();
-					//System.out.println("\n\n\nif1 " + this.state);
 					this.departuretransmonitor.arriveDepTransTerm();
-					//System.out.println("\n\n\nif2 " + this.state);
 					this.departuretransmonitor.waitForPassengers();
-					//System.out.println("\n\n\nif3 " + this.state);
 					this.goToArrivalTerminal();	
-					//System.out.println("\n\n\nif4 " + this.state);
 					break;
 									
 				case DRIVING_BACKWARD:
-					//logger.toPrint();
-					//System.out.println("\n\n\nif1 " + this.state);
+					logger.toPrint();
 					this.parkTheBus();
-					//System.out.println("\n\n\nif2 " + this.state);
 					break;
-					
+			
 				default:
 			}
 		}

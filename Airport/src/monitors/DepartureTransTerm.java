@@ -25,27 +25,20 @@ public class DepartureTransTerm implements DepartureTransTermPassengerInterface,
 	}
 
 	public boolean leaveTheBus(Passenger P) {
-	
 		lock.lock();
 		try {
-			
 			while(!this.arrive) {
 				waitToArrive.await();
 			}
 			if(arrive) {
-				
 				bus.removePassenger(P);	
 				return true;
 			}
-			
-		
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			if(bus.PassengerSize() == 0) {
 				busEmpty.signal();
-				
 			}
 			lock.unlock();
 		}
@@ -56,10 +49,8 @@ public class DepartureTransTerm implements DepartureTransTermPassengerInterface,
 	public void arriveDepTransTerm() {
 		lock.lock();
 		try {
-			
 			this.arrive = true;
 		}finally {
-			
 			waitToArrive.signalAll();
 			lock.unlock();
 		}
@@ -72,16 +63,13 @@ public class DepartureTransTerm implements DepartureTransTermPassengerInterface,
 	public void waitForPassengers() {
 		lock.lock();
 		try {
-			while(!(bus.PassengerSize() == 0)) {
-				
+			while((bus.PassengerSize() != 0)) {
 				busEmpty.await();
 			}
-			//System.out.print("\n\n\n indo em frente \n\n\n");
 			leaveDepTransTerm();
 			
 
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			lock.unlock();

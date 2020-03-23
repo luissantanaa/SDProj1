@@ -106,8 +106,6 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 			if(plane.getBags().size()>0) {
 				return true;
 			}
-			
-			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}finally {
@@ -125,10 +123,8 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 					return null;
 				}
 			}finally {
-				
 				lock.unlock();
 			}
-			
 	}
 	
 	public int goCollectPassengers() {
@@ -139,18 +135,15 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 			}	
 			
 			if(sizeBus>=3) {
-				System.out.print("\n\n\nsignal Drivera A "+ 3 +"\n\n\n");
 				sizeBus-=3;
 				return 3;
 			}else if(sizeBus!=0){
-				System.out.print("\n\n\nsignal Drivera A "+ sizeBus+"\n\n\n");
 				int sizeb = sizeBus;
 				sizeBus=0;
 				return sizeb;
 			}
 			
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			lock.unlock();

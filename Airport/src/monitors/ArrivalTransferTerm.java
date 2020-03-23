@@ -8,7 +8,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import Interfaces.ArrivalTransferTermBDriverInterface;
 import Interfaces.ArrivalTransferTermPassengerInterface;
 import airport.Bus;
-import airport.BusDriver;
 import airport.Logger;
 import airport.Passenger;
 
@@ -26,7 +25,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	private boolean lastPass = false;
 	private boolean driverLeft = false;
-	private boolean lestGo = false;
+	private boolean canEnter = false;
 	private int passNumber = 0;
 	
 	public ArrivalTransferTerm(Bus bus, Logger logger) {
@@ -51,10 +50,10 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 				}
 
 			
-			while(!bus.hasSpace() || driverLeft || !lestGo) {
+			while(!bus.hasSpace() || driverLeft || !canEnter) {
 				if(this.passNumber!=0 && passengersWaiting.size() >= this.passNumber) {
 					
-					lestGo=true;
+					canEnter=true;
 					break;
 				}else {
 					passengerWait.await();
@@ -63,7 +62,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 			}
 		
 			// if it the first one on queueu enter the bus
-			if(lestGo) {
+			if(canEnter) {
 				
 				passengerWait.signalAll();	
 				if(passengersWaiting.peek() == p) {
@@ -71,15 +70,14 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 					if(bus.addPassenger(passengersWaiting.poll())) {
 						
 						logger.removePassengersWaiting(p);
-						System.out.print("\n\n\n"+ passengersWaiting.size() + "\n");
 						if(!bus.hasSpace()) {
-							lestGo = false;
+							canEnter = false;
 							this.passNumber=0;
 							busFull.signal();
 							
 						}else if(passengersWaiting.size()== 0) {
 							this.passNumber=0;
-							lestGo = false;
+							canEnter = false;
 							lastPass = true;
 							busFull.signal();
 							
@@ -91,7 +89,6 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 			}
 			
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
 			lock.unlock();
@@ -106,7 +103,6 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		lock.lock();
 		try {	
 			lastPass = true;
-			//System.out.print("\n\n\n GO \n\n\n");
 		}finally {
 			busFull.signal();
 			lock.unlock();
@@ -156,7 +152,6 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		try {
 			
 			this.passNumber = passNumber;
-			System.out.print("\n\n\nsignal Drivera BD "+this.passNumber+" \n\n\n");
 			lastPass = false;
 			driverLeft = false;
 			

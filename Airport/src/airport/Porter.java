@@ -77,7 +77,7 @@ public class Porter extends Thread{
 					}
 					break;
 				case AT_THE_PLANES_HOLD:
-			
+					logger.toPrint();
 					this.b = this.arrivalmonitor.collectBag();
 					if(this.b == null) {
 						this.baggageCollectPointMonitor.noMoreBags();
@@ -115,7 +115,6 @@ public class Porter extends Thread{
 	
 	public void tryToCollectABag() {
 		this.state = StatesPorter.AT_THE_PLANES_HOLD;
-		logger.toPrint();
 	}
 	
 	public void carryItToAppropriateStore(StatesPorter state) {

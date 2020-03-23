@@ -31,7 +31,6 @@ public class Passenger extends Thread{
 	private boolean dest;
 	private String time = null;
 	private int bagCollected = 0;
-	private String destino;
 	private Logger logger;
 	
 	public Passenger(Logger logger,int id, List<Bag> b, 
@@ -56,10 +55,7 @@ public class Passenger extends Thread{
 		this.baggageReclaimofficepassengerinterface=baggageReclaimofficepassengerinterface;
 		this.departurearrivaltermpassengerinterface=departurearrivaltermpassengerinterface;
 		this.departuretermentrancepassengerinterface=departuretermentrancepassengerinterface;
-		
-		if(dest){
-			destino = "FDT";
-		}
+
 		
 	}
 	
@@ -175,7 +171,6 @@ public class Passenger extends Thread{
 		while(!stateIsFinal()) {
 			switch(this.state) {
 				case AT_THE_DISEMBARKING_ZONE:
-					
 					// Retorna o estado dependendo se tem malas e se chegou ao seu destino
 					this.state=arrivalmonitor.whatShouldIDo(this.b, this.dest);
 					logger.toPrint();
@@ -195,7 +190,6 @@ public class Passenger extends Thread{
 					}
 					
 					if(this.bagCollected==b.size()) { // verifica se � possivel recolher a mala
-						
 						goHome(); // vai para casa
 					}else {
 						reportMissingBag(); // reportar mala perdida
@@ -204,7 +198,6 @@ public class Passenger extends Thread{
 					
 				case AT_THE_ARRIVAL_TRANSFER_TERMINAL:
 					if(arrivaltransfertermPassengerinterface.enterTheBus(this)) { // verifica se � possivel entrar no autocarro
-						
 						enterTheBus(); // entrar no autocarro
 					}
 					break;
@@ -215,17 +208,13 @@ public class Passenger extends Thread{
 					
 					break;
 				case TERMINAL_TRANSFER:
-					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
-
 					if(departurearrivaltermpassengerinterface.leaveTheBus(this)) { // sair do autocarro
-						
 						leaveTheBus();
 					}
 				
 					break;
 					
 				case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
-					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
 					//departuretermentrancepassengerinterface.prepareNextLeg(this); // preparar proximo voo
 					prepareNextLeg();
 					break;
@@ -259,10 +248,10 @@ public class Passenger extends Thread{
 	 }
 	public void leaveTheBus() {
 		 this.state= StatesPerson.AT_THE_DEPARTURE_TRANSFER_TERMINAL;
-		 //logger.toPrint();
+		 logger.toPrint();
 	 }
 	public void prepareNextLeg() {
 		 this.state= StatesPerson.ENTERING_THE_DEPARTURE_TERMINAL ;
-		// logger.toPrint();
+		 logger.toPrint();
 	 } 	
 }

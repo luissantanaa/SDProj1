@@ -102,32 +102,22 @@ public class Airport {
 		for(int n=0; n<nPlanes;n++){
 			arrivalmonitor.setPlane(planes[n]);
 			baggagecollectpoint.moreBags();
-			int i=0;
 			log.setPlane(planes[n]);
 			while(!planes[n].isEmpty()) {
 				Passenger p = planes[n].removePassenger();
-				//log.addPassengers(p);
 				p.start();
 			}
-			
-			
-			
-			
-			for(int y=0;y<nPassengers;y++){
-				
+			for(int y=0;y<nPassengers;y++){	
 				try {
-				
 					passengers[n][y].join();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 			}
-			
 			
 			log.resetPassenger();
 		}
+		
 		arrivalmonitor.lastFlight();
 		arrivaltransferterm.dayWordEnd();
 		
@@ -135,11 +125,8 @@ public class Airport {
 			porter.join();
 			BD.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 		
 		log.finalPrint();
 	}
