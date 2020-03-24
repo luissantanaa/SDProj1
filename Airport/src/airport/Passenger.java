@@ -33,6 +33,7 @@ public class Passenger extends Thread{
 	private int bagCollected = 0;
 	private Logger logger;
 	
+	//construtor para passageiros que apenas realizam um voo
 	public Passenger(Logger logger,int id, List<Bag> b, 
 			         boolean destination, 
 			         ArrivalLoungeInterfacePassenger arrivalmonitor, 
@@ -58,7 +59,7 @@ public class Passenger extends Thread{
 
 		
 	}
-	
+	//construtor para passageiros que apresentam 2 voos
 	public Passenger(int id, List<Bag> b, boolean destination, String time, 
 			         ArrivalLoungeInterfacePassenger arrivalmonitor, 
 			         BaggageCollectPointPassengerInterface baggagecollectpoint,
@@ -129,6 +130,7 @@ public class Passenger extends Thread{
 		return false;
 	}
 	
+	//função usada pelo logger para passar os estados para a respetiva sigla
 	public String getString() {
 		String s="";
 		switch(this.state) {

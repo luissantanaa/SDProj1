@@ -3,16 +3,19 @@ package airport;
 import java.util.Queue;
 
 public class Plane {
-	Queue<Passenger> passengers;
-	 
-	int planeId;
-	Queue<Bag> bags;
+	private Queue<Passenger> passengers;
+	private int planeId;
+	private Queue<Bag> bags;
+	
+	//construtor
 	public Plane(Queue<Passenger> passengers, int planeId, Queue<Bag> bags) {
 		super();
 		this.passengers = passengers;
 		this.planeId = planeId;
 		this.bags = bags;
 	}
+	
+	//getters e setters
 	public Queue<Passenger> getPassengers() {
 		return passengers;
 	}

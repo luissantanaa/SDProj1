@@ -15,10 +15,10 @@ import airport.Logger;
 
 public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,BaggageCollectPointPassengerInterface  {
 	private final ReentrantLock lock = new ReentrantLock();
-	 private final Condition bagNotAdded = lock.newCondition(); 
-	 private boolean noMoreBag = false;
-	List<Bag> bags;
-	Logger logger;
+	private final Condition bagNotAdded = lock.newCondition(); 
+	private boolean noMoreBag = false;
+	private List<Bag> bags;
+	private Logger logger;
 	
 	public BaggageCollectPoint(Logger logger) {
 		bags = new ArrayList<Bag>();

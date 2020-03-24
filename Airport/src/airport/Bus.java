@@ -17,6 +17,8 @@ public class Bus {
 		this.maxPasse = MaxPasse;
 		this.passengers = new ArrayList<Passenger>();
 	}
+	
+	//getters and setters
 	public List<Passenger> getPassengers() {
 		return passengers;
 	}
@@ -29,6 +31,8 @@ public class Bus {
 	public boolean hasSpace() {
 		return this.passengers.size() != this.maxPasse; 
 	}
+	
+	//adicionar passageiro ao autocarro
 	public boolean addPassenger(Passenger P) {
 		
 		lock.lock();
@@ -44,6 +48,8 @@ public class Bus {
 
 		return false;
 	}
+	
+	//remover passageiro
 	public boolean removePassenger(Passenger P) {
 		lock.lock();
 		try {
@@ -57,6 +63,7 @@ public class Bus {
 		return false;
 	}
 	
+	//função usada pelo logger
 	public String toPrint() {
 		String s = "";
 		switch(passengers.size()) {

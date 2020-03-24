@@ -1,6 +1,6 @@
 package airport;
 
-public class Bag {
+public class Bag { //construtor
 	private int owner;
 	private boolean dest;
 	private int number;
@@ -9,6 +9,8 @@ public class Bag {
 		this.dest = dest;
 		this.number = number;
 	}
+	
+	//getters and setters
 	public int getOwner() {
 		return owner;
 	}

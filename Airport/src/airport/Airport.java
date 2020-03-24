@@ -12,23 +12,24 @@ public class Airport {
 
 	public static void main(String[] args) {
 
-		int nPlanes = 5;
-		int nPassengers = 6;
+		int nPlanes = 5; // nrº de aviões
+		int nPassengers = 6; // nrº de passageiros por avião
 		
 		
-		Plane[] planes = new Plane[nPlanes];
-		Passenger[][] passengers = new Passenger[nPlanes][nPassengers];
+		Plane[] planes = new Plane[nPlanes]; //aviões a ser usados
+		Passenger[][] passengers = new Passenger[nPlanes][nPassengers]; //passageiros e o seu respetivo avião
 		
 		
 		//LOGGER
-		Logger log = new Logger();
+		Logger log = new Logger(); 	//instanciação do Logger e print inicial
 		log.printInit();
 				
 		//BUS
-		Bus bus = new Bus(3);
+		Bus bus = new Bus(3); //instanciação do autocarro 
 
 
 		//Monitors
+		//construtores dos varios monitores utilizados ao longo da simulação
 		ArrivalLounge arrivalmonitor = new ArrivalLounge(log);
 		BaggageCollectPoint baggagecollectpoint = new BaggageCollectPoint(log);
 		ArrivalTransferTerm arrivaltransferterm = new ArrivalTransferTerm(bus,log);
@@ -44,19 +45,20 @@ public class Airport {
 		
 		
 		//BusDriver
+		//instanciação do condutor do autocarro usado na simulação
 		BusDriver BD = new BusDriver( (DepartureTransTermBDriverInterface) departurearrivalterm,
 									(ArrivalTransferTermBDriverInterface) arrivaltransferterm,
 									(ArrivalLoungeInterfaceBDriver) arrivalmonitor, log);
 		
 
-		//Passenger
+		//instanciação dos passageiros e das suas malas para o numero de aviões selecionado em cima
 		for(int n = 0; n<nPlanes; n++){
-			Queue<Passenger> passengerQueue = new LinkedList<>();
-			Queue<Bag> BagQueue = new LinkedList<>();
+			Queue<Passenger> passengerQueue = new LinkedList<>();//fila de passageiros
+			Queue<Bag> BagQueue = new LinkedList<>();	//fila de malas
 		
 			for(int i=0;i<nPassengers;i++){
-				int rand = new Random().nextInt(4);
-				if(rand==0){
+				int rand = new Random().nextInt(2); //geração de um pseudointeiro entre [0,2[ para decidir se o passageiro esta no destino 
+				if(rand==0){						//ou se tem que ir para outro voo
 						passengers[n][i] =  new Passenger(log, 6*n+i,null,false,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
@@ -71,64 +73,64 @@ public class Airport {
 							(DepartureTransTermPassengerInterface) departurearrivalterm,
 							(DepartureTermEntrancePassengerInterface) departuretermentr);
 				}
-				int nBags = new Random().nextInt(3);
-				List<Bag> listbag = new ArrayList<Bag>();
+				int nBags = new Random().nextInt(3);//geração de um pseudointeiro entre [0,3[ para decidir o nrº de malas de cada passageiro
+				List<Bag> listbag = new ArrayList<Bag>(); //lista de malas de cada passageiro
 				for(int nb = 1; nb<=nBags; nb++){
-					Bag b = new Bag(i+n,  passengers[n][i].isDest(), nb);
+					Bag b = new Bag(i+n,  passengers[n][i].isDest(), nb); //instanciação de cada mala
 					listbag.add(b);
 					BagQueue.add(b);
 				}
-				passengers[n][i].setB(listbag);
+				passengers[n][i].setB(listbag); //associar lista de malas ao seu dono
 				
-				passengerQueue.add(passengers[n][i]);
+				passengerQueue.add(passengers[n][i]); //adicionar passageiro a fila de passageiros do respetivo aviao
 				
 			}	
 			//PLANE
-			planes[n] = new Plane(passengerQueue,n,BagQueue);	
+			planes[n] = new Plane(passengerQueue,n,BagQueue); //instanciação do avião usando a lista de passageiros e malas
 		}
 
-		Porter porter = new Porter(log,(ArrivalLoungeInterfacePorter) arrivalmonitor,
+		Porter porter = new Porter(log,(ArrivalLoungeInterfacePorter) arrivalmonitor,	//instanciação do bagageiro usado na simulação
 			(BaggageCollectPointPorterInterface) baggagecollectpoint,
 			(TempStorageInterfacePorter) tempstoragearea);
 			
-
+		//passagem dos recursos necessários para o funcionamento do logger
 		log.setBusDriver(BD);
 		log.setPorter(porter);
 		log.setBus(bus);
 	
-		porter.start();
+		porter.start(); //inicio do lifecycle das threads do bagageiro e do condutor do autocarro
 		BD.start();
 
-		for(int n=0; n<nPlanes;n++){
+		for(int n=0; n<nPlanes;n++){ //cada avião é passado ao monitor e ao logger,é sinalizado que existem malas para recolher
 			arrivalmonitor.setPlane(planes[n]);
 			baggagecollectpoint.moreBags();
 			log.setPlane(planes[n]);
-			while(!planes[n].isEmpty()) {
+			while(!planes[n].isEmpty()) { //enquanto houver passageiros no aviao,remove do avião e inicia o ciclo de vida do passageiro
 				Passenger p = planes[n].removePassenger();
 				p.start();
 			}
 			for(int y=0;y<nPassengers;y++){	
 				try {
-					passengers[n][y].join();
+					passengers[n][y].join();	//termina a execução de todos os passageiros
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 			
-			log.resetPassenger();
+			log.resetPassenger(); //da reset aos passageiros no logger entre aviões
 		}
 		
-		arrivalmonitor.lastFlight();
+		arrivalmonitor.lastFlight(); //sinaliza que foi o ultimo avião e que o dia acabou
 		arrivaltransferterm.dayWordEnd();
 		
 		try {
-			porter.join();
+			porter.join(); //termina a execução do bagageiro e do condutor do autocarro
 			BD.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
-		log.finalPrint();
+		log.finalPrint();//print final do logger
 	}
 
 } 

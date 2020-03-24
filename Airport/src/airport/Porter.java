@@ -7,15 +7,15 @@ import Interfaces.TempStorageInterfacePorter;
 import states.StatesPorter;
 
 public class Porter extends Thread{
-	private ArrivalLoungeInterfacePorter arrivalmonitor;
+	private ArrivalLoungeInterfacePorter arrivalmonitor; //monitores usados pelo bagageiro
 	private BaggageCollectPointPorterInterface baggageCollectPointMonitor;
-	private Bag b;
+	private TempStorageInterfacePorter tempstoragemonitor;	
+	private Bag b; //mala que foi buscar
 	private StatesPorter state;
-	private TempStorageInterfacePorter tempstoragemonitor;
 	private Logger logger ;
-	volatile boolean end = false;
+	volatile boolean end = false; //boolean volatil usado para terminar a thread
 
-
+	//construtor
 	public Porter( Logger logger , ArrivalLoungeInterfacePorter arrivalmonitor, BaggageCollectPointPorterInterface baggageCollectPointMonitor, TempStorageInterfacePorter tempstoragemonitor) {
 		super();
 		this.arrivalmonitor = arrivalmonitor;
@@ -25,6 +25,7 @@ public class Porter extends Thread{
 		this.logger = logger;
 		
 	}
+	//getters and setters
 	public Bag getB() {
 		return b;
 	}
@@ -34,6 +35,8 @@ public class Porter extends Thread{
 	public StatesPorter getStates() {
 		return state;
 	}
+	
+	//função usada pelo Logger para passar o estado para a respetiva sigla
 	public String getString() {
 		String s="";
 		switch(this.state) {
@@ -55,20 +58,22 @@ public class Porter extends Thread{
 		return s;
 
 	}
-	public boolean isStateFinal() {
+	
+	//funções auxiliares
+	public boolean isStateFinal() { //função que retorna se o estado correspondente é final ou não
 		return end;
 	}
 	public void endThread(){
-        end = true;
+        end = true;	//função que sinaliza a morte da thread
 
     }
 	
 	
-	public void run() {
+	public void run() {	//lifecycle da thread
 		while(!isStateFinal()){
 			switch(this.state) {
 				case WAITING_FOR_A_PLANE_TO_LAND:
-					if(arrivalmonitor.itWasLast()) {
+					if(arrivalmonitor.itWasLast()) { //se for o ultimo voo, mata a thread
 						endThread();
 					}
 					if(arrivalmonitor.takeARest()){
@@ -79,15 +84,15 @@ public class Porter extends Thread{
 				case AT_THE_PLANES_HOLD:
 					logger.toPrint();
 					this.b = this.arrivalmonitor.collectBag();
-					if(this.b == null) {
+					if(this.b == null) { //se for null, nao ha mais malas para recolher e muda o estado
 						this.baggageCollectPointMonitor.noMoreBags();
 						this.noMoreBagsToCollect();
 					}else {
-						if(this.b.isDest()) {
+						if(this.b.isDest()) { //verifica o destino da mala e encaminha a mesma para o seu respetivo sitio
 							this.carryItToAppropriateStore(StatesPorter.AT_THE_LUGGAGE_BELT_CONVEYOR);
 							
 							if(this.baggageCollectPointMonitor.addBag(this.b)) {
-								logger.incrementCB();
+								logger.incrementCB(); //função do logger que incrementa o nr de malas recolhidas
 								logger.toPrint();
 							}
 							
@@ -103,26 +108,26 @@ public class Porter extends Thread{
 				
 					break;
 				case AT_THE_LUGGAGE_BELT_CONVEYOR:
-					this.tryToCollectABag();
+					this.tryToCollectABag(); //função de mudança de estado
 					break;
 				case AT_THE_STOREROOM:
-					this.tryToCollectABag();
+					this.tryToCollectABag(); //função de mudança de estado
 					break;
 				default:
 			}
 		}
 	}
 	
-	public void tryToCollectABag() {
+	public void tryToCollectABag() { //função de mudança de estado
 		this.state = StatesPorter.AT_THE_PLANES_HOLD;
 	}
 	
-	public void carryItToAppropriateStore(StatesPorter state) {
+	public void carryItToAppropriateStore(StatesPorter state) { //função de mudança de estado
 		this.state = state;
 	}
 
 	
-	public void noMoreBagsToCollect() {
+	public void noMoreBagsToCollect() { //função de mudança de estado
 		this.state = StatesPorter.WAITING_FOR_A_PLANE_TO_LAND;
 		logger.toPrint();
 	}
