@@ -3,6 +3,7 @@ package airport;
 import java.util.List;
 
 import Interfaces.ArrivalLoungeInterfacePassenger;
+import Interfaces.ArrivalTermExitPassengerInterface;
 import Interfaces.ArrivalTransferTermPassengerInterface;
 import Interfaces.BaggageCollectPointPassengerInterface;
 import Interfaces.BaggageReclaimOfficePassengerInterface;
@@ -23,7 +24,7 @@ public class Passenger extends Thread{
 	private BaggageReclaimOfficePassengerInterface baggageReclaimofficepassengerinterface;
 	private DepartureTransTermPassengerInterface departurearrivaltermpassengerinterface;
 	private DepartureTermEntrancePassengerInterface departuretermentrancepassengerinterface;
-	
+	private ArrivalTermExitPassengerInterface arrivaltermexitpassengerinterface;
 	
 	// Variaveis Pessoais
 	private int id;
@@ -33,6 +34,9 @@ public class Passenger extends Thread{
 	private int bagCollected = 0;
 	private Logger logger;
 	
+	
+	private volatile boolean end=false; 
+	
 	//construtor para passageiros que apenas realizam um voo
 	public Passenger(Logger logger,int id, List<Bag> b, 
 			         boolean destination, 
@@ -41,7 +45,8 @@ public class Passenger extends Thread{
 			         ArrivalTransferTermPassengerInterface arrivaltransfertermPassengerinterface,
 			         BaggageReclaimOfficePassengerInterface baggageReclaimofficepassengerinterface,
 			         DepartureTransTermPassengerInterface departurearrivaltermpassengerinterface,
-			         DepartureTermEntrancePassengerInterface departuretermentrancepassengerinterface) {
+			         DepartureTermEntrancePassengerInterface departuretermentrancepassengerinterface,
+			         ArrivalTermExitPassengerInterface arrivaltermexitpassengerinterface) {
 		
 		this.logger = logger;
 		this.id = id;
@@ -56,35 +61,10 @@ public class Passenger extends Thread{
 		this.baggageReclaimofficepassengerinterface=baggageReclaimofficepassengerinterface;
 		this.departurearrivaltermpassengerinterface=departurearrivaltermpassengerinterface;
 		this.departuretermentrancepassengerinterface=departuretermentrancepassengerinterface;
+		this.arrivaltermexitpassengerinterface=arrivaltermexitpassengerinterface;
 
 		
-	}
-	//construtor para passageiros que apresentam 2 voos
-	public Passenger(int id, List<Bag> b, boolean destination, String time, 
-			         ArrivalLoungeInterfacePassenger arrivalmonitor, 
-			         BaggageCollectPointPassengerInterface baggagecollectpoint,
-			         ArrivalTransferTermPassengerInterface arrivaltransfertermPassengerinterface,
-			         BaggageReclaimOfficePassengerInterface baggageReclaimofficepassengerinterface,
-			         DepartureTransTermPassengerInterface departurearrivaltermpassengerinterface,
-			         DepartureTermEntrancePassengerInterface departuretermentrancepassengerinterface) {
-		
-		this.id = id;
-		this.b = b;
-		this.dest = destination;
-		this.time = time;
-		this.state = StatesPerson.AT_THE_DISEMBARKING_ZONE;
-		
-		//Monitors interfaces
-		this.arrivalmonitor=arrivalmonitor;
-		this.baggagecollectpoint=baggagecollectpoint;
-		this.baggageReclaimofficepassengerinterface=baggageReclaimofficepassengerinterface;
-		this.departurearrivaltermpassengerinterface=departurearrivaltermpassengerinterface;
-		this.departuretermentrancepassengerinterface=departuretermentrancepassengerinterface;
-
-	}
-	
-	
-	
+	}	
 	
 	//Getters and Setters
 	public int getPId() {
@@ -122,14 +102,6 @@ public class Passenger extends Thread{
 	}
 	
 	
-	// Verifica se o passageiro se encontra num estado final
-	public boolean stateIsFinal() {
-		if(this.state== StatesPerson.EXITING_THE_ARRIVAL_TERMINAL || this.state== StatesPerson.ENTERING_THE_DEPARTURE_TERMINAL) {
-			return true;
-		}
-		return false;
-	}
-	
 	//função usada pelo logger para passar os estados para a respetiva sigla
 	public String getString() {
 		String s="";
@@ -150,12 +122,15 @@ public class Passenger extends Thread{
 			case TERMINAL_TRANSFER:
 				s = s + "TRT";
 				break;
-				
 			case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
 				s = s + "DTT";
 				break;
-			default:
+			case EXITING_THE_ARRIVAL_TERMINAL:
 				s = s + "EAT";	
+				break;
+			case ENTERING_THE_DEPARTURE_TERMINAL:
+				s = s + "EDT";
+				break;
 		}
 		
 		if(this.dest) {
@@ -170,7 +145,7 @@ public class Passenger extends Thread{
 	public void run() {
 		logger.addPassengers(this);
 		logger.toPrint();
-		while(!stateIsFinal()) {
+		while(!end) {
 			switch(this.state) {
 				case AT_THE_DISEMBARKING_ZONE:
 					// Retorna o estado dependendo se tem malas e se chegou ao seu destino
@@ -192,7 +167,7 @@ public class Passenger extends Thread{
 					}
 					
 					if(this.bagCollected==b.size()) { // verifica se � possivel recolher a mala
-						goHome(); // vai para casa
+						goExitArrivalTerm(); // vai para casa
 					}else {
 						reportMissingBag(); // reportar mala perdida
 					}
@@ -206,7 +181,7 @@ public class Passenger extends Thread{
 				case AT_THE_BAGGAGE_RECLAIM_OFFICE:
 					//System.out.println("state,id,bags  " + this.state +" : "+ this.id + " : " + this.b.size());
 					baggageReclaimofficepassengerinterface.reportMissingBag(this); // reportar mala perdida
-					goHome(); // ir para casa
+					goExitArrivalTerm(); // ir para casa
 					
 					break;
 				case TERMINAL_TRANSFER:
@@ -216,24 +191,41 @@ public class Passenger extends Thread{
 				
 					break;
 					
+				case EXITING_THE_ARRIVAL_TERMINAL:
+					if(arrivaltermexitpassengerinterface.GoHome(this)) {
+						endThread();
+						
+						break;
+					}
+					break;
 				case AT_THE_DEPARTURE_TRANSFER_TERMINAL:
-					//departuretermentrancepassengerinterface.prepareNextLeg(this); // preparar proximo voo
-					prepareNextLeg();
+					if(departuretermentrancepassengerinterface.prepareNextLeg(this)) {
+						// preparar proximo voo
+						 prepareNextLeg();
+						 
+					}
+					break;
+				case ENTERING_THE_DEPARTURE_TERMINAL:
+					endThread();
 					break;
 				default:
 			}
-		}
 
+		}
+		
+	
 	}
 	
 	
 	// Mudan�as de estado
-	public void goHome() {
+	public void goExitArrivalTerm() {
 		this.state = StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
+	
 		logger.toPrint();
 	}
 	public void goCollectABag() {
 		this.state= StatesPerson.AT_THE_LUGGAGE_COLLECTION_POINT;
+
 		logger.toPrint();
 	}
 	public void takeABus() {
@@ -254,6 +246,12 @@ public class Passenger extends Thread{
 	 }
 	public void prepareNextLeg() {
 		 this.state= StatesPerson.ENTERING_THE_DEPARTURE_TERMINAL ;
+		
 		 logger.toPrint();
 	 } 	
+	
+	public void endThread() {
+		end = true;
+		//logger.toPrint();
+	}
 }

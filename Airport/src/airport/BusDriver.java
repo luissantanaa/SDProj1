@@ -67,6 +67,7 @@ public class BusDriver extends Thread{
 				case PARKING_AT_THE_ARRIVAL_TERMINAL:
 					logger.toPrint();
 					if(!arrivaltranferterm.hasDaysWorkEnded()) { //enquanto o dia de trabalho nao acabar verifica se ha passageiros para recolher
+						
 						int numPass = arrivallounge.goCollectPassengers();
 						if(numPass!=-1) { //se existem passageiros para recolher, anuncia que esta a espera de passageiros
 							arrivaltranferterm.announcingBusBoarding(numPass);

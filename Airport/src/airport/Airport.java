@@ -30,16 +30,15 @@ public class Airport {
 
 		//Monitors
 		//construtores dos varios monitores utilizados ao longo da simulação
-		ArrivalLounge arrivalmonitor = new ArrivalLounge(log);
+		
 		BaggageCollectPoint baggagecollectpoint = new BaggageCollectPoint(log);
 		ArrivalTransferTerm arrivaltransferterm = new ArrivalTransferTerm(bus,log);
 		BaggageReclaimOffice baggagereclaimoffice = new BaggageReclaimOffice(log); 
 		DepartureTransTerm  departurearrivalterm = new  DepartureTransTerm(bus,log);
 		DepartureTermEntr departuretermentr = new DepartureTermEntr();
 		TempStorageArea tempstoragearea = new TempStorageArea(log);
- 
-		//ArrivalTermExit arrivaltermexit = new ArrivalTermExit();
-
+		ArrivalTermExit arrivaltermexit = new ArrivalTermExit();
+		ArrivalLounge arrivalmonitor = new ArrivalLounge(log,departuretermentr,arrivaltermexit);
 		//Resources 
 	
 		
@@ -59,19 +58,21 @@ public class Airport {
 			for(int i=0;i<nPassengers;i++){
 				int rand = new Random().nextInt(2); //geração de um pseudointeiro entre [0,2[ para decidir se o passageiro esta no destino 
 				if(rand==0){						//ou se tem que ir para outro voo
-						passengers[n][i] =  new Passenger(log, 6*n+i,null,false,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+						passengers[n][i] =  new Passenger(log, 6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
 							(DepartureTransTermPassengerInterface) departurearrivalterm,
-							(DepartureTermEntrancePassengerInterface) departuretermentr);
+							(DepartureTermEntrancePassengerInterface) departuretermentr,
+							(ArrivalTermExitPassengerInterface) arrivaltermexit);
 				}else{
-						passengers[n][i] = new Passenger(log,6*n+i,null,true,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
+						passengers[n][i] = new Passenger(log,6*n+i,null,false,(ArrivalLoungeInterfacePassenger) arrivalmonitor, 
 							(BaggageCollectPointPassengerInterface) baggagecollectpoint,
 							(ArrivalTransferTermPassengerInterface) arrivaltransferterm,
 							(BaggageReclaimOfficePassengerInterface) baggagereclaimoffice,
 							(DepartureTransTermPassengerInterface) departurearrivalterm,
-							(DepartureTermEntrancePassengerInterface) departuretermentr);
+							(DepartureTermEntrancePassengerInterface) departuretermentr,
+							(ArrivalTermExitPassengerInterface) arrivaltermexit);
 				}
 				int nBags = new Random().nextInt(3);//geração de um pseudointeiro entre [0,3[ para decidir o nrº de malas de cada passageiro
 				List<Bag> listbag = new ArrayList<Bag>(); //lista de malas de cada passageiro

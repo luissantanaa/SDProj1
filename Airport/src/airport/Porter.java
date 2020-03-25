@@ -116,6 +116,7 @@ public class Porter extends Thread{
 				default:
 			}
 		}
+		
 	}
 	
 	public void tryToCollectABag() { //função de mudança de estado

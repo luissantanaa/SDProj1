@@ -3,5 +3,5 @@ package Interfaces;
 import airport.Passenger;
 
 public interface DepartureTermEntrancePassengerInterface {
-	public void prepareNextLeg(Passenger P);
+	public boolean prepareNextLeg(Passenger P);
 }

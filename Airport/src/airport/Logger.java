@@ -79,8 +79,8 @@ public class Logger{
     }
     
     public void toPrint() {
-       	boolean canPrint=true;
     	lock.lock();
+      	boolean canPrint=true;
     	try {
     		while(canPrint) {
         		try {

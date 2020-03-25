@@ -26,8 +26,11 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	private Logger logger;
 	private int sizeBus;
 	
+	private DepartureTermEntr departMonitor; 
+	private int departureNpassengers =0;
 	
-
+	private ArrivalTermExit arrivalMonitor;
+	private int arrivalNpassengers =0;
 	
 	public Plane getPlane() {
 		return plane;
@@ -37,12 +40,16 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		this.logger.setBagSizes(this.getPlane().getBags().size());
 		size = 0;
 		sizeBus = 0;
+		departureNpassengers =0;
+		arrivalNpassengers =0;
 	}
-	public ArrivalLounge(Logger logger){
+	public ArrivalLounge(Logger logger, DepartureTermEntr departMonitor, ArrivalTermExit arrivalMonitor){
 		size = 0;
 		sizeBus = 0;
 		lastF = false;
 		this.logger = logger;
+		this.departMonitor = departMonitor;
+		this.arrivalMonitor=arrivalMonitor;
 	}
 	
 	
@@ -53,6 +60,7 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 			lastF = true;
 		}finally {
 			porterc.signal();
+			busDriver.signal();
 			lock.unlock();
 		}
 	
@@ -69,6 +77,7 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		lock.lock();
 		try {
 			if(dest) {
+				arrivalNpassengers++;
 				logger.incPassDest();
 				if(bag.isEmpty()) {
 					return StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
@@ -78,6 +87,7 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 				
 			}else {
 				logger.incPassTransit();
+				departureNpassengers++;
 				return StatesPerson.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
 			}
 			
@@ -90,11 +100,21 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 			if(size==6) {
 				porterc.signal();
 				busDriver.signal();
+				setDepartureNPassengers();
+				setArrivalNPassengers();
 			}else if(sizeBus == 3) {
 					busDriver.signalAll();
 			}
 			lock.unlock();
 		}	
+	}
+	
+	public void setDepartureNPassengers() {
+		departMonitor.setNPassengers(departureNpassengers);
+	}
+
+	public void setArrivalNPassengers() {
+		arrivalMonitor.setNPassengers(arrivalNpassengers);
 	}
 	
 	public boolean takeARest() {
@@ -130,10 +150,10 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	public int goCollectPassengers() {
 		lock.lock();
 		try {
-			while(sizeBus<3 && size<6) {
+			while((sizeBus<3 && size<6  && !lastF)  || (sizeBus == 0  && !lastF) ) {
 				busDriver.await();
 			}	
-			
+
 			if(sizeBus>=3) {
 				sizeBus-=3;
 				return 3;
