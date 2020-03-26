@@ -11,23 +11,26 @@ import airport.Passenger;
 
 public class DepartureTransTerm implements DepartureTransTermPassengerInterface,DepartureTransTermBDriverInterface{
 	private final ReentrantLock lock = new ReentrantLock();
-	private final Condition busEmpty = lock.newCondition();
-	private final Condition waitToArrive = lock.newCondition();
+	private final Condition busEmpty = lock.newCondition(); //condiçao que simboliza o autocarro estar vazio
+	private final Condition waitToArrive = lock.newCondition(); //condiçao que simboliza a espera da chegada do autocarro
 	
 	
 	private boolean arrive=false;
 	private Bus bus;
-	Logger logger;
+	//private Logger logger;
 	
+	
+	//construtor
 	public DepartureTransTerm(Bus bus, Logger logger) {
 		this.bus = bus;
-		this.logger = logger;
+		//this.logger = logger;
 	}
 
+	//função para a saida do autocarro
 	public boolean leaveTheBus(Passenger P) {
 		lock.lock();
 		try {
-			while(!this.arrive) {
+			while(!this.arrive) { //enquanto o autocarro nao tiver chegado, fica em espera
 				waitToArrive.await();
 			}
 			if(arrive) {

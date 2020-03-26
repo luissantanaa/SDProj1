@@ -6,7 +6,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 import Interfaces.DepartureTermEntrancePassengerInterface;
-import airport.Bag;
 import airport.Passenger;
 
 public class DepartureTermEntr implements DepartureTermEntrancePassengerInterface {
@@ -15,6 +14,8 @@ public class DepartureTermEntr implements DepartureTermEntrancePassengerInterfac
 	private final Condition plock = lock.newCondition(); 
 	private List<Passenger> pList;
 	
+	
+	//construtor
 	public DepartureTermEntr() {
 			nPassengers = 0;
 			pList = new ArrayList<>();
@@ -24,26 +25,28 @@ public class DepartureTermEntr implements DepartureTermEntrancePassengerInterfac
 		lock.lock();
 		try {
 			
-			nPassengers = n;
+			nPassengers = n; //nrº de passageiros que vao ficar a espera para ir para o proximo voo
 	
 		}finally {
 			plock.signalAll();
 			lock.unlock();
 		}
 	}
+	
+	
 	public boolean prepareNextLeg(Passenger P) {
 		lock.lock();
 		try {
-			if(!pList.contains(P)) {
+			if(!pList.contains(P)) { //se nao estiver na lista de espera de passageiros que vao para o proximo voo, adiciona
 				pList.add(P);
 			}
 			
-			while(nPassengers==0 || nPassengers!=pList.size()) {
-				
-				plock.await();
+			while(nPassengers==0 || nPassengers!=pList.size()) { //enquanto o nr de passageiros em espera for 0 
+																//OU enquanto o tamanho da fila for diferente do nr de passageiros que vao ter que ficar em espera
+				plock.await();									//fica em espera
 			}
 		
-			nPassengers--;
+			nPassengers--; //retira passageiro da lista e do nr de passageiros total em espera
 			pList.remove(P);
 			return true;
 		} catch (InterruptedException e) {

@@ -15,19 +15,21 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	
 	private final ReentrantLock lock = new ReentrantLock();
-	private final Condition busFull = lock.newCondition();
-	private final Condition passengerWait = lock.newCondition();
+	private final Condition busFull = lock.newCondition(); //condição autocarro cheio
+	private final Condition passengerWait = lock.newCondition(); //condição para espera de passageiros
 	
 	private Bus bus;
 	private Logger logger;
 	private boolean dayWorkEnd;
 	private Queue<Passenger> passengersWaiting;
 	
-	private boolean lastPass = false;
-	private boolean driverLeft = false;
-	private boolean canEnter = false;
-	private int passNumber = 0;
+	private boolean lastPass = false; //boolean simboliza ultimo passageiro do voo
+	private boolean driverLeft = false; //boolean simboliza se o condutor do autocarro esta em viagem
+	private boolean canEnter = false; //boolean simboliza se os passageiros podem entrar no autocarro
+	private int passNumber = 0; //nrº de passageiros que vão entrar no autocarro
 	
+	
+	//construtor
 	public ArrivalTransferTerm(Bus bus, Logger logger) {
 		this.bus = bus;
 		this.logger = logger;
@@ -38,22 +40,22 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	
 	
-	public boolean enterTheBus(Passenger p) {
+	public boolean enterTheBus(Passenger p) { //entrada de passageiros para o autocarro
 		
 		lock.lock();
 		try {	
 
-				if(!passengersWaiting.contains(p)) {
+				if(!passengersWaiting.contains(p)) { //se nao esta na fila de espera para entrar no autocarro, entra na fila
 					passengersWaiting.add(p);
 					logger.addPassengersWaiting(p);
 					logger.toPrint();
 				}
 
 			
-			while(!bus.hasSpace() || driverLeft || !canEnter) {
-				if(this.passNumber!=0 && passengersWaiting.size() >= this.passNumber) {
-					
-					canEnter=true;
+			while(!bus.hasSpace() || driverLeft || !canEnter) { //se o autocarro não tem espaço ou não pode entrar, ou o condutor esta em viagem, a thread fica em espera
+				if(this.passNumber!=0 && passengersWaiting.size() >= this.passNumber) { //se o nrº de passageiros da viagem for diferente de 0
+																						//e o tamanho da fila de espera for igual ao nrº de passageiros da viagem
+					canEnter=true;														//entao podem entrar
 					break;
 				}else {
 					passengerWait.await();
@@ -61,25 +63,25 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 				
 			}
 		
-			// if it the first one on queueu enter the bus
+			
 			if(canEnter) {
 				
-				passengerWait.signalAll();	
-				if(passengersWaiting.peek() == p) {
+				passengerWait.signalAll();	//se podem entrar acorda as threads
+				if(passengersWaiting.peek() == p) { //se o passageiro em questão for o passageiro no primeiro lugar da fila
 					
-					if(bus.addPassenger(passengersWaiting.poll())) {
+					if(bus.addPassenger(passengersWaiting.poll())) { //então é adicionado
 						
 						logger.removePassengersWaiting(p);
-						if(!bus.hasSpace()) {
+						if(!bus.hasSpace()) { //se o autocarro estiver cheio, passageiros nao podem entrar
 							canEnter = false;
-							this.passNumber=0;
-							busFull.signal();
+							this.passNumber=0; //nrº de passageiros da viagem passa a 0
+							busFull.signal(); //e o condutor é sinalizado
 							
-						}else if(passengersWaiting.size()== 0) {
-							this.passNumber=0;
-							canEnter = false;
-							lastPass = true;
-							busFull.signal();
+						}else if(passengersWaiting.size()== 0) { //se nao estiver ninguem na fila de espera
+							this.passNumber=0; //nrº de passageiros da viagem passa a 0
+							canEnter = false; //ninguem pode entrar
+							lastPass = true; //ultimo passageiro passa a true simbolizando que a viagem anterior foi a ultima
+							busFull.signal(); //condutor é acordado para terminar o seu ciclo de vida
 							
 						}
 						
@@ -98,22 +100,22 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	}
 	
 	
-	
+	//funções auxiliares
 	public void LastPassenger() {
-		lock.lock();
+		lock.lock();					//VER
 		try {	
 			lastPass = true;
 		}finally {
-			busFull.signal();
+			busFull.signal(); //ultimo passageiro acorda o condutor para terminar o seu lifecycle
 			lock.unlock();
 		}
 	}
 	
-	public void dayWordEnd() {
+	public void dayWorkEnd() {
 		lock.lock();
 		try {
 			this.dayWorkEnd = true;
-			busFull.signal();
+			busFull.signal(); //ultimo passageiro acorda o condutor para terminar o seu lifecycle
 		}finally {
 			lock.unlock();
 		}
@@ -123,9 +125,9 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		
 		lock.lock();
 		try {
-			while(bus.hasSpace() && !this.dayWorkEnd && !lastPass ) {	
-				
-				busFull.await();
+			while(bus.hasSpace() && !this.dayWorkEnd && !lastPass ) { //enquanto o autocarro nao estiver cheio
+																	//e o dia ainda nao tiver acabado e ainda nao tiver entrado o ultimo passageiro	
+				busFull.await();									//a thread fica em wait
 			}
 		
 				driverLeft = true;
@@ -146,7 +148,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	}
 	
 	
-	
+	//anuncia que o autocarro esta a receber pessoas
 	public void announcingBusBoarding(int passNumber) {
 		lock.lock();
 		try {

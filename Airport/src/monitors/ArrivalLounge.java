@@ -43,6 +43,8 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		departureNpassengers =0;
 		arrivalNpassengers =0;
 	}
+	
+	//construtor
 	public ArrivalLounge(Logger logger, DepartureTermEntr departMonitor, ArrivalTermExit arrivalMonitor){
 		size = 0;
 		sizeBus = 0;
@@ -53,7 +55,7 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	}
 	
 	
-	// Work day ended
+	//sinaliza o final do dia de trabalho para bagageiro e condutor autocarro
 	public void lastFlight() {
 		lock.lock();
 		try {
@@ -66,7 +68,7 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	
 	}
 	
-	
+	//retorna variavel booleana que sinaliza final do dia
 	public boolean itWasLast() {
 		return lastF;
 	}
@@ -76,16 +78,16 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		
 		lock.lock();
 		try {
-			if(dest) {
+			if(dest) { //se o passageiro estiver no destino, ou vai buscar malas ou vai para casa
 				arrivalNpassengers++;
 				logger.incPassDest();
-				if(bag.isEmpty()) {
+				if(bag.isEmpty()) { //se nao tiver malas, vai para casa
 					return StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
 					
 				}
 				return StatesPerson.AT_THE_LUGGAGE_COLLECTION_POINT;
 				
-			}else {
+			}else { //se nao estiver no destino, prepara se para o proximo voo
 				logger.incPassTransit();
 				departureNpassengers++;
 				return StatesPerson.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
@@ -93,37 +95,38 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 			
 		}finally {			
 			size++;
-			if(!dest) {
+			if(!dest) { //conta nr de passageiros que nao estao no destino
 				sizeBus ++;
 			}
 			
-			if(size==6) {
+			if(size==6) { //se todos os passageiros ja souberem o que fazer, acorda condutor e bagageiro
 				porterc.signal();
 				busDriver.signal();
 				setDepartureNPassengers();
 				setArrivalNPassengers();
-			}else if(sizeBus == 3) {
+			}else if(sizeBus == 3) { //se houver passageiros suficientes para encher autocarro, sinaliza o condutor do autocarro
 					busDriver.signalAll();
 			}
 			lock.unlock();
 		}	
 	}
 	
-	public void setDepartureNPassengers() {
+	public void setDepartureNPassengers() { //passa o nr de passageiros ao monitor
 		departMonitor.setNPassengers(departureNpassengers);
 	}
 
-	public void setArrivalNPassengers() {
+	public void setArrivalNPassengers() { //passa o nr de passageiros ao monitor
 		arrivalMonitor.setNPassengers(arrivalNpassengers);
 	}
 	
 	public boolean takeARest() {
 		lock.lock();
 		try {	
-			while( (size!=6 && !lastF) || (plane.getBags().size()==0 && !lastF)) {
-				porterc.await();
-			}
-			if(plane.getBags().size()>0) {
+			while( (size!=6 && !lastF) || (plane.getBags().size()==0 && !lastF)) { //se o nr de passgeiros que ja sabe o que fazer
+																					//for diferente do nrº de passageiros do aviao e nao for o ultimo voo
+				porterc.await();													//OU a lista de malas do aviao estiver a zero e nao for o ultimo voo
+			}																		// o bagageiro fica em espera
+			if(plane.getBags().size()>0) {	//se houver malas para recolher retorna true
 				return true;
 			}
 		} catch (InterruptedException e) {
@@ -134,6 +137,8 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		return false;
 	}
 	
+	
+	//função de recolha de malas
 	public Bag collectBag() {
 			lock.lock();
 			try {
@@ -150,12 +155,13 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	public int goCollectPassengers() {
 		lock.lock();
 		try {
-			while((sizeBus<3 && size<6  && !lastF)  || (sizeBus == 0  && !lastF) ) {
-				busDriver.await();
-			}	
-
-			if(sizeBus>=3) {
-				sizeBus-=3;
+			while((sizeBus<3 && size<6  && !lastF)  || (sizeBus == 0  && !lastF) ) { //se o nrº de passageiros do autocarro for igual ao valor maximo
+				busDriver.await();													// e o nr de passageiros encaminhados for igual ao nr de passageiros do aviao
+			}																		// e nao  for o ultimo voo
+																					//OU nao houver pessoas em espera para o autocarro e nao for o ultimo voo
+																					//o condutor fica em espera
+			if(sizeBus>=3) {	//se o nr de pessoas em espera para o autocarro for igual ou maior ao tamanho do autocarro
+				sizeBus-=3;		//retira o tamanho do autocarro a fila de espera
 				return 3;
 			}else if(sizeBus!=0){
 				int sizeb = sizeBus;

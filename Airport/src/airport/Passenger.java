@@ -155,7 +155,7 @@ public class Passenger extends Thread{
 					
 				case AT_THE_LUGGAGE_COLLECTION_POINT:
 					logger.toPrint();
-					for(int i=0;i< b.size();i++) {
+					for(int i=0;i< b.size();i++) {	//ve se é possivel recolher a/as mala/as
 						boolean bagFound = baggagecollectpoint.collectBag(this.b.get(i));
 						if(bagFound) {
 							this.bagCollected++;
@@ -191,7 +191,7 @@ public class Passenger extends Thread{
 				
 					break;
 					
-				case EXITING_THE_ARRIVAL_TERMINAL:
+				case EXITING_THE_ARRIVAL_TERMINAL:	//estado final, termina a thread
 					if(arrivaltermexitpassengerinterface.GoHome(this)) {
 						endThread();
 						

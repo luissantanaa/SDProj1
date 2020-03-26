@@ -122,7 +122,7 @@ public class Airport {
 		}
 		
 		arrivalmonitor.lastFlight(); //sinaliza que foi o ultimo avião e que o dia acabou
-		arrivaltransferterm.dayWordEnd();
+		arrivaltransferterm.dayWorkEnd();
 		
 		try {
 			porter.join(); //termina a execução do bagageiro e do condutor do autocarro

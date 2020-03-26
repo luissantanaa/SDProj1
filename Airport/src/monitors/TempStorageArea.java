@@ -13,11 +13,12 @@ public class TempStorageArea implements TempStorageInterfacePorter {
 	List<Bag> bags;
 	Logger logger;
 	
-	
+	//construtor
 	public TempStorageArea(Logger logger) {
 		bags = new ArrayList<Bag>();
 		this.logger = logger;
 	}
+	//adição de malas
 	public boolean addBag(Bag bag){
 		lock.lock();
 		try {

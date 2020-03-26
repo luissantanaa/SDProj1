@@ -15,14 +15,16 @@ import airport.Logger;
 
 public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,BaggageCollectPointPassengerInterface  {
 	private final ReentrantLock lock = new ReentrantLock();
-	private final Condition bagNotAdded = lock.newCondition(); 
-	private boolean noMoreBag = false;
+	private final Condition bagNotAdded = lock.newCondition();  //condição para acordar o passageiro caso a sua mala seja perdida
+	private boolean noMoreBag = false; //boolean que sinaliza a falta de malas para recolher
 	private List<Bag> bags;
-	private Logger logger;
+	//private Logger logger;
 	
+	
+	//construtor
 	public BaggageCollectPoint(Logger logger) {
 		bags = new ArrayList<Bag>();
-		this.logger = logger;
+		//this.logger = logger;
 	}
 	
 	public void moreBags() {
@@ -30,12 +32,12 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 	}
 	
 	public boolean addBag(Bag bag){
-		//notify para acordar passageiro
+
 		boolean lost = true;
 		lock.lock();
 		try {
 			
-			if(Math.random() >= 0.25) { //0.25
+			if(Math.random() >= 0.25) { //probabilidade da mala ser perdida
 				lost = false;
 				bags.add(bag);
 				return true;
@@ -59,6 +61,8 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 			lock.unlock();
 		}
 	}
+	
+	//função para recolher mala
 	public boolean collectBag(Bag bag) {
 		lock.lock();
 		try {	

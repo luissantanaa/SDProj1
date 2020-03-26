@@ -8,13 +8,16 @@ import airport.Logger;
 import airport.Passenger;
 
 public class BaggageReclaimOffice implements BaggageReclaimOfficePassengerInterface {
-	List<Passenger> passengerReclaim; 
-	Logger logger;
+	private List<Passenger> passengerReclaim; 
+	//private Logger logger;
+	
+	//construtor
 	public BaggageReclaimOffice(Logger logger) {
 		passengerReclaim = new ArrayList<Passenger>(); 
-		this.logger = logger;
+		//this.logger = logger;
 	}
 	
+	//reportar mala perdida, adiciona passageiro a lista de passageiros que perderam malas
 	public void reportMissingBag(Passenger P) {
 		
 		passengerReclaim.add(P);
