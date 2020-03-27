@@ -1,5 +1,12 @@
 package airport;
 
+/**
+ * Ficheiro principal
+ * Autores: 
+ * João Teixeira
+ * Luís Santana 80304
+ */
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
@@ -7,9 +14,19 @@ import java.util.Queue;
 import Interfaces.*;
 import monitors.*;
 import java.util.Random;
-
+	/**
+	 * 
+	 * Classe principal
+	 *
+	 */
 public class Airport {
 
+	/**
+	 * @param int nPlanes representa nrº de voos a realizar \n
+	 * @param int nPassengers representa nrº de passageiros em cada avião
+	 * @param Plane[] planes array que guarda os aviões a ser usados na simulação
+	 * @param Passenger[][] passengers array que guarda os passageiros e o seu respetivo avião
+	 */
 	public static void main(String[] args) {
 
 		int nPlanes = 5; // nrº de aviões

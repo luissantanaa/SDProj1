@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 
+ * Classe que implementa o autocarro usado durante a simulação
+ *
+ */
 
 public class Bus {	
 	private List<Passenger> passengers;
@@ -11,7 +16,10 @@ public class Bus {
 	private final ReentrantLock lock = new ReentrantLock();
 	
 	
-	
+	/**
+	 * 
+	 * @param MaxPasse - nrº maximo de passageiros do autocarro
+	 */
 	public Bus(int MaxPasse) {
 		super();
 		this.maxPasse = MaxPasse;
@@ -33,6 +41,11 @@ public class Bus {
 	}
 	
 	//adicionar passageiro ao autocarro
+	/**
+	 * 
+	 * @param P - passageiro a adicionar ao autocarro
+	 * @return true se passageiro foi adicionado ao autocarro
+	 */
 	public boolean addPassenger(Passenger P) {
 		
 		lock.lock();
@@ -50,6 +63,11 @@ public class Bus {
 	}
 	
 	//remover passageiro
+	/**
+	 * 
+	 * @param P - passageiro a remover do autocarro
+	 * @return true se passageiro foi removido do autocarro
+	 */
 	public boolean removePassenger(Passenger P) {
 		lock.lock();
 		try {

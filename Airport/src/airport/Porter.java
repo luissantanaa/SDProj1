@@ -6,6 +6,11 @@ import Interfaces.BaggageCollectPointPorterInterface;
 import Interfaces.TempStorageInterfacePorter;
 import states.StatesPorter;
 
+
+/**
+ * classe que simula o bagageiro 
+ * 
+ **/
 public class Porter extends Thread{
 	private ArrivalLoungeInterfacePorter arrivalmonitor; //monitores usados pelo bagageiro
 	private BaggageCollectPointPorterInterface baggageCollectPointMonitor;
@@ -16,6 +21,13 @@ public class Porter extends Thread{
 	volatile boolean end = false; //boolean volatil usado para terminar a thread
 
 	//construtor
+	/**
+	 * 
+	 * @param logger - usado para log durante a simulação
+	 * @param arrivalmonitor - Monitor Arrival Lounge
+	 * @param baggageCollectPointMonitor - Monitor Baggage Collection Point
+	 * @param tempstoragemonitor - Monitor Temporary Storage
+	 */
 	public Porter( Logger logger , ArrivalLoungeInterfacePorter arrivalmonitor, BaggageCollectPointPorterInterface baggageCollectPointMonitor, TempStorageInterfacePorter tempstoragemonitor) {
 		super();
 		this.arrivalmonitor = arrivalmonitor;
@@ -25,6 +37,10 @@ public class Porter extends Thread{
 		this.logger = logger;
 		
 	}
+	/**
+	 * 
+	 * Getters e setters da classe
+	 */
 	//getters and setters
 	public Bag getB() {
 		return b;
@@ -36,6 +52,10 @@ public class Porter extends Thread{
 		return state;
 	}
 	
+	/**
+	 * 
+	 * Função usado para passar os estados para a sua respetiva sigla
+	 */
 	//função usada pelo Logger para passar o estado para a respetiva sigla
 	public String getString() {
 		String s="";
@@ -68,7 +88,9 @@ public class Porter extends Thread{
 
     }
 	
-	
+	/**
+	 * Função run simula o lifecycle da thread
+	 */
 	public void run() {	//lifecycle da thread
 		while(!isStateFinal()){
 			switch(this.state) {
@@ -119,15 +141,23 @@ public class Porter extends Thread{
 		
 	}
 	
+	/**
+	 * função transição de estado
+	 */
 	public void tryToCollectABag() { //função de mudança de estado
 		this.state = StatesPorter.AT_THE_PLANES_HOLD;
 	}
 	
+	/**
+	 * função transição de estado
+	 */
 	public void carryItToAppropriateStore(StatesPorter state) { //função de mudança de estado
 		this.state = state;
 	}
 
-	
+	/**
+	 * função transição de estado
+	 */
 	public void noMoreBagsToCollect() { //função de mudança de estado
 		this.state = StatesPorter.WAITING_FOR_A_PLANE_TO_LAND;
 		logger.toPrint();

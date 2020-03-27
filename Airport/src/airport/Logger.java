@@ -8,6 +8,13 @@ import java.io.File;  // Import the File class
 import java.io.FileWriter;
 import java.io.IOException; 
 
+
+/**
+ * 
+ * classe que implementa o logger usado na simulação 
+ * Escreve para a consola e para um ficheiro
+ *
+ */
 public class Logger{
 	private Porter porter;
 	private Plane plane;

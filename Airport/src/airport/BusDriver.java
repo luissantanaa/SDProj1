@@ -5,6 +5,11 @@ import Interfaces.ArrivalTransferTermBDriverInterface;
 import Interfaces.DepartureTransTermBDriverInterface;
 import states.StatesBusD;
 
+
+/**
+ * 
+ * Classe que implementa o condutor do autocarro
+ */
 public class BusDriver extends Thread{
 	
 	private StatesBusD state;
@@ -18,6 +23,13 @@ public class BusDriver extends Thread{
 	private Logger logger;
 	
 	//construtor
+	/**
+	 * 
+	 * @param departuretransmonitor - Monitor Departure Transfer Terminal
+	 * @param arrivaltranferterm - Monitor Arrival Transfer Terminal
+	 * @param arrivallounge - Monitor Arrival Lounge
+	 * @param logger
+	 */
 	public BusDriver(DepartureTransTermBDriverInterface departuretransmonitor,
 						ArrivalTransferTermBDriverInterface arrivaltranferterm,
 						ArrivalLoungeInterfaceBDriver arrivallounge,
@@ -31,14 +43,25 @@ public class BusDriver extends Thread{
 	}
 	
 	//getters and setters
+	/**
+	 * 
+	 * @return estado
+	 */
 	public StatesBusD getStates() {
 		return state;
 	}
+	/*
+	 * Setter do estado do condutor
+	 */
 	public void setState(StatesBusD state) {
 		this.state = state;
 	}
 	
 	//função usada pelo logger
+	/**
+	 * 
+	 * @return sigla corresponde ao estado
+	 */
 	public String getString() {
 		String s="";
 	switch(this.state) {
@@ -60,6 +83,9 @@ public class BusDriver extends Thread{
 	}
 	
 	
+	/**
+	 * função run simula o lifecyle da thread
+	 */
 	//função que simula o lifecycle da thread
 	public void run() {
 		while(!end) {
@@ -108,16 +134,32 @@ public class BusDriver extends Thread{
     }
 	
 	
+	
 	//funções de transição de estados
+	/**
+	 * função transição de estado
+	 */
 	public void goToArrivalTerminal() {
 		this.state = StatesBusD.DRIVING_BACKWARD;
 	}
+	
+	/**
+	 * função transição de estado
+	 */
 	public void parkTheBus() {
 		this.state = StatesBusD.PARKING_AT_THE_ARRIVAL_TERMINAL;
 	}
+	
+	/**
+	 * função transição de estado
+	 */
 	public void goToDepartureTerminal() {
 		this.state = StatesBusD.DRIVING_FORWARD;
 	}
+	
+	/**
+	 * função transição de estado
+	 */
 	public void parkTheBusAndLetPassOff() {
 		this.state = StatesBusD.PARKING_AT_THE_DEPARTURE_TERMINAL;
 	}

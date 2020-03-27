@@ -2,6 +2,7 @@ package airport;
 
 import java.util.List;
 
+
 import Interfaces.ArrivalLoungeInterfacePassenger;
 import Interfaces.ArrivalTermExitPassengerInterface;
 import Interfaces.ArrivalTransferTermPassengerInterface;
@@ -10,6 +11,14 @@ import Interfaces.BaggageReclaimOfficePassengerInterface;
 import Interfaces.DepartureTransTermPassengerInterface;
 import Interfaces.DepartureTermEntrancePassengerInterface;
 import states.StatesPerson;
+
+
+/**
+ * 
+ * classe que implementa os passageiros usados na simulação
+ * função run simula o lifecycle da thread
+ *
+ */
 public class Passenger extends Thread{
 	
 	
@@ -37,6 +46,21 @@ public class Passenger extends Thread{
 	
 	private volatile boolean end=false; 
 	
+	
+	/**
+	 * Construtor da classe
+	 * @param logger - usado para logs durante a simulação
+	 * @param id - identificador do passageiro
+	 * @param b - lista de malas do passageiro
+	 * @param destination - boolean que indica se o passageiro esta no destino ou nao
+	 * @param arrivalmonitor - Monitor Arrival Lounge
+	 * @param baggagecollectpoint - Monitor Baggage Collection Point
+	 * @param arrivaltransfertermPassengerinterface - Monitor Arrival Transfer Terminal
+	 * @param baggageReclaimofficepassengerinterface - Monitor Baggage Reclaim Office
+	 * @param departurearrivaltermpassengerinterface - Monitor Departure Arrival Terminal
+	 * @param departuretermentrancepassengerinterface - Monitor Departure Terminal Entrance
+	 * @param arrivaltermexitpassengerinterface - Monitor Arrival Terminal Exit
+	 */
 	//construtor para passageiros que apenas realizam um voo
 	public Passenger(Logger logger,int id, List<Bag> b, 
 			         boolean destination, 
@@ -66,6 +90,10 @@ public class Passenger extends Thread{
 		
 	}	
 	
+	/**
+	 * 
+	 * Getters and setters da classe
+	 */
 	//Getters and Setters
 	public int getPId() {
 		return id;
@@ -102,6 +130,10 @@ public class Passenger extends Thread{
 	}
 	
 	
+	/**
+	 * 
+	 * Função usada pelo logger que passa os estados para a sua respetica sigla
+	 */
 	//função usada pelo logger para passar os estados para a respetiva sigla
 	public String getString() {
 		String s="";
@@ -141,6 +173,10 @@ public class Passenger extends Thread{
 		
 		return s;
 	}
+	
+	/**
+	 * função run simula o lifecycle da thread
+	 */
 	// Maquina de Estados
 	public void run() {
 		logger.addPassengers(this);
@@ -218,38 +254,68 @@ public class Passenger extends Thread{
 	
 	
 	// Mudan�as de estado
+	/**
+	 * função transição de estado
+	 */
 	public void goExitArrivalTerm() {
 		this.state = StatesPerson.EXITING_THE_ARRIVAL_TERMINAL;
 	
 		logger.toPrint();
 	}
+	
+	/**
+	 * função transição de estado
+	 */
 	public void goCollectABag() {
 		this.state= StatesPerson.AT_THE_LUGGAGE_COLLECTION_POINT;
 
 		logger.toPrint();
 	}
+	
+	/**
+	 * função transição de estado
+	 */
 	public void takeABus() {
 		 this.state= StatesPerson.AT_THE_ARRIVAL_TRANSFER_TERMINAL;
 		 logger.toPrint();
 	 }
+	
+	/**
+	 * função transição de estado
+	 */
 	public void reportMissingBag() {
 		 this.state= StatesPerson.AT_THE_BAGGAGE_RECLAIM_OFFICE;
 		 logger.toPrint();
 	 }
+	
+	/**
+	 * função transição de estado
+	 */
 	public void enterTheBus() {
 		 this.state= StatesPerson.TERMINAL_TRANSFER;
 		 logger.toPrint();
 	 }
+	
+	/**
+	 * função transição de estado
+	 */
 	public void leaveTheBus() {
 		 this.state= StatesPerson.AT_THE_DEPARTURE_TRANSFER_TERMINAL;
 		 logger.toPrint();
 	 }
+	
+	/**
+	 * função transição de estado
+	 */
 	public void prepareNextLeg() {
 		 this.state= StatesPerson.ENTERING_THE_DEPARTURE_TERMINAL ;
 		
 		 logger.toPrint();
 	 } 	
 	
+	/**
+	 * função para terminar a thread
+	 */
 	public void endThread() {
 		end = true;
 		//logger.toPrint();
