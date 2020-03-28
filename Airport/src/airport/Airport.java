@@ -29,7 +29,7 @@ public class Airport {
 	 */
 	public static void main(String[] args) {
 
-		int nPlanes = 5; // nrº de aviões
+		int nPlanes = 1000; // nrº de aviões
 		int nPassengers = 6; // nrº de passageiros por avião
 		
 		
