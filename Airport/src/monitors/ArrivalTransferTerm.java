@@ -112,19 +112,6 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 			
 	}
 	
-	
-	//funções auxiliares
-	public void LastPassenger() {
-		lock.lock();					//VER
-		try {	
-			lastPass = true;
-		}finally {
-			busFull.signal(); //ultimo passageiro acorda o condutor para terminar o seu lifecycle
-			lock.unlock();
-		}
-	}
-	
-	
 	public void dayWorkEnd() {
 		lock.lock();
 		try {
