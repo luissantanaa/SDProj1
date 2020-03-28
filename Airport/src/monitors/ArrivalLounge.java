@@ -14,6 +14,12 @@ import airport.Logger;
 import airport.Plane;
 import states.StatesPerson;
 
+/**
+ * 
+ * Monitor Arrival Lounge
+ *
+ */
+
 public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLoungeInterfacePorter, ArrivalLoungeInterfaceBDriver{
 	private final ReentrantLock lock = new ReentrantLock();
 	private final Condition porterc = lock.newCondition(); 
@@ -45,6 +51,12 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	}
 	
 	//construtor
+	/**
+	 * 
+	 * @param logger
+	 * @param departMonitor - Departure Terminal Entrance Monitor
+	 * @param arrivalMonitor - Arrival Lounge Monitor
+	 */
 	public ArrivalLounge(Logger logger, DepartureTermEntr departMonitor, ArrivalTermExit arrivalMonitor){
 		size = 0;
 		sizeBus = 0;
@@ -56,6 +68,9 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	
 	
 	//sinaliza o final do dia de trabalho para bagageiro e condutor autocarro
+	/**
+	 * sinaliza o final do dia de trabalho para bagageiro e condutor autocarro
+	 */
 	public void lastFlight() {
 		lock.lock();
 		try {
@@ -69,11 +84,17 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	}
 	
 	//retorna variavel booleana que sinaliza final do dia
+	/**
+	 *@return variavel booleana que sinaliza final do dia
+	 */
 	public boolean itWasLast() {
 		return lastF;
 	}
 	
 	
+	/**
+	 * Função usada pelos passageiros para decidirem o que fazer, quando saiem do avião
+	 */
 	public StatesPerson whatShouldIDo(List<Bag> bag, boolean dest) {
 		
 		lock.lock();
@@ -111,14 +132,23 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 		}	
 	}
 	
+	/**
+	 * passa o nr de passageiros ao monitor
+	 */
 	public void setDepartureNPassengers() { //passa o nr de passageiros ao monitor
 		departMonitor.setNPassengers(departureNpassengers);
 	}
 
+	/**
+	 * passa o nr de passageiros ao monitor
+	 */
 	public void setArrivalNPassengers() { //passa o nr de passageiros ao monitor
 		arrivalMonitor.setNPassengers(arrivalNpassengers);
 	}
 	
+	/**
+	 * Função usada pelo bagageiro, enquanto nao ha malas para recolher
+	 */
 	public boolean takeARest() {
 		lock.lock();
 		try {	
@@ -139,6 +169,9 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 	
 	
 	//função de recolha de malas
+	/**
+	 * função usada pelo bagageiro para recolher malas
+	 */
 	public Bag collectBag() {
 			lock.lock();
 			try {
@@ -152,6 +185,9 @@ public class ArrivalLounge implements ArrivalLoungeInterfacePassenger,ArrivalLou
 			}
 	}
 	
+	/**
+	 * função usada pelo condutor do autocarro para quando pode recolher passageiros
+	 */
 	public int goCollectPassengers() {
 		lock.lock();
 		try {

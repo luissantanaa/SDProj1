@@ -1,0 +1,133 @@
+AIRPORT RHAPSODY - Description of the internal state of the problem
+
+PLANE    PORTER                  DRIVER
+FN BN  Stat CB SR   Stat  Q1 Q2 Q3 Q4 Q5 Q6  S1 S2 S3
+                                                         PASSENGERS
+St1 Si1 NR1 NA1 St2 Si2 NR2 NA2 St3 Si3 NR3 NA3 St4 Si4 NR4 NA4 St5 Si5 NR5 NA5 St6 Si6 NR6 NA6
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 - - - 
+ --- --- - -  --- --- - -  --- --- - -  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 - - - 
+ --- --- - -  --- --- - -  --- --- - -  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 - - - 
+WSD TRT 1 0  --- --- - -  --- --- - -  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 - - - 
+ATT TRT 1 0  --- --- - -  --- --- - -  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 0 - - - - -	 - - - 
+ATT TRT 1 0  --- --- - -  --- --- - -  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 0 - - - - -	 - - - 
+ATT TRT 1 0 WSD TRT 2 0  --- --- - -  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 0 - - - - -	 - - - 
+ATT TRT 1 0 ATT TRT 2 0  --- --- - -  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 0 1 - - - -	 - - - 
+ATT TRT 1 0 ATT TRT 2 0  --- --- - -  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 0 1 - - - -	 - - - 
+ATT TRT 1 0 ATT TRT 2 0 WSD TRT 2 0  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 0 1 - - - -	 - - - 
+ATT TRT 1 0 ATT TRT 2 0 ATT TRT 2 0  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 0 1 2 - - -	 - - - 
+ATT TRT 1 0 ATT TRT 2 0 ATT TRT 2 0  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 1 2 - - - -	 0 1 - 
+TRT TRT 1 0 ATT TRT 2 0 ATT TRT 2 0  --- --- - -  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 2 - - - - -	 0 1 2
+TRT TRT 1 0 TRT TRT 2 0 ATT TRT 2 0 WSD FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 2 - - - - -	 0 1 2
+TRT TRT 1 0 TRT TRT 2 0 ATT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 0 1 2
+TRT TRT 1 0 TRT TRT 2 0 TRT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 0 1 2
+TRT TRT 1 0 TRT TRT 2 0 TRT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	DRFW	 - - - - - -	 0 1 2
+TRT TRT 1 0 TRT TRT 2 0 TRT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKDT	 - - - - - -	 0 1 2
+TRT TRT 1 0 TRT TRT 2 0 TRT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKDT	 - - - - - -	 2 - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKDT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	DRBW	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	DRBW	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0  --- --- - -  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 WSD FDT 2 0  --- --- - - 
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 WSD FDT 2 0 WSD TRT 0 0 
+0 7  	WPTL 0 0	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 7  	APLH 0 0	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 7  	APLH 0 0	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 7  	APLH 0 0	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 7  	APLH 0 0	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 6  	ALCR 0 1	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 6  	APLH 0 1	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 5  	ALCR 0 2	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 5  	APLH 0 2	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 4  	ALCR 0 3	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 4  	APLH 0 3	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 3  	ALCR 0 4	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 3  	APLH 0 4	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 2  	ALCR 0 5	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 2  	APLH 0 5	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 1  	ALCB 1 5	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 1  	APLH 1 5	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 0  	ALCB 2 5	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 0  	APLH 2 5	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 0  	WPTL 2 5	PKAT	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 0  	WPTL 2 5	PKAT	 5 - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 ATT TRT 0 0 
+0 0  	WPTL 2 5	PKAT	 - - - - - -	 5 - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 TRT TRT 0 0 
+0 0  	WPTL 2 5	DRFW	 - - - - - -	 5 - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 TRT TRT 0 0 
+0 0  	WPTL 2 5	PKDT	 - - - - - -	 5 - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 TRT TRT 0 0 
+0 0  	WPTL 2 5	DRBW	 - - - - - -	 - - - 
+DTT TRT 1 0 DTT TRT 2 0 DTT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 DTT TRT 0 0 
+0 0  	WPTL 2 5	DRBW	 - - - - - -	 - - - 
+EDT TRT 1 0 EDT TRT 2 0 EDT TRT 2 0 EAT FDT 0 0 LCP FDT 2 0 EDT TRT 0 0 
+0 0  	WPTL 1 5	PKAT	 - - - - - -	 - - - 
+EDT TRT 1 0 EDT TRT 2 0 EDT TRT 2 0 EAT FDT 0 0 LCP FDT 2 1 EDT TRT 0 0 
+0 0  	WPTL 1 5	PKAT	 - - - - - -	 - - - 
+EDT TRT 1 0 EDT TRT 2 0 EDT TRT 2 0 EAT FDT 0 0 LCP FDT 2 1 EDT TRT 0 0 
+0 0  	WPTL 1 5	PKAT	 - - - - - -	 - - - 
+EDT TRT 1 0 EDT TRT 2 0 EDT TRT 2 0 EAT FDT 0 0 LCP FDT 2 1 EDT TRT 0 0 
+0 0  	WPTL 1 5	PKAT	 - - - - - -	 - - - 
+EDT TRT 1 0 EDT TRT 2 0 EDT TRT 2 0 EAT FDT 0 0 LCP FDT 2 1 EDT TRT 0 0 
+0 0  	WPTL 1 5	PKAT	 - - - - - -	 - - - 
+EDT TRT 1 0 EDT TRT 2 0 EDT TRT 2 0 EAT FDT 0 0 LCP FDT 2 1 EDT TRT 0 0 
+0 0  	WPTL 1 5	PKAT	 - - - - - -	 - - - 
+EDT TRT 1 0 EDT TRT 2 0 EDT TRT 2 0 EAT FDT 0 0 LCP FDT 2 1 EDT TRT 0 0 
+0 0  	WPTL 0 5	PKAT	 - - - - - -	 - - - 
+EDT TRT 1 0 EDT TRT 2 0 EDT TRT 2 0 EAT FDT 0 0 LCP FDT 2 2 EDT TRT 0 0 
+0 0  	WPTL 0 5	PKAT	 - - - - - -	 - - - 
+EDT TRT 1 0 EDT TRT 2 0 EDT TRT 2 0 EAT FDT 0 0 EAT FDT 2 2 EDT TRT 0 0 
+0 0  	WPTL 0 5	PKAT	 - - - - - -	 - - - 
+ --- --- - -  --- --- - -  --- --- - -  --- --- - -  --- --- - -  --- --- - - 
+
+
+Final report
+N. of passengers which have this airport as their final destination = 2
+N. of passengers in transit = 4
+N. of bags that should have been transported in the the planes hold = 7
+N. of bags that were lost = 0

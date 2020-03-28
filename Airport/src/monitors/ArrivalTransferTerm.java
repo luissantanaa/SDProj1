@@ -11,6 +11,12 @@ import airport.Bus;
 import airport.Logger;
 import airport.Passenger;
 
+/**
+ * 
+ * Monitor Arrival Transfer Terminal
+ *
+ */
+
 public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterface, ArrivalTransferTermBDriverInterface{
 	
 	
@@ -30,6 +36,11 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	
 	//construtor
+	/**
+	 * 
+	 * @param bus autocarro usado na simulação
+	 * @param logger
+	 */
 	public ArrivalTransferTerm(Bus bus, Logger logger) {
 		this.bus = bus;
 		this.logger = logger;
@@ -39,7 +50,9 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	
 	
 	
-	
+	/**
+	 * função usada pelos passageiros para entrar no autcarro
+	 */
 	public boolean enterTheBus(Passenger p) { //entrada de passageiros para o autocarro
 		
 		lock.lock();
@@ -111,6 +124,7 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 		}
 	}
 	
+	
 	public void dayWorkEnd() {
 		lock.lock();
 		try {
@@ -120,7 +134,9 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 			lock.unlock();
 		}
 	}
-	
+	/**
+	 * função usada para verificar se o autocarro esta cheio ou nao
+	 */
 	public boolean BusNotFull() {
 		
 		lock.lock();
@@ -142,13 +158,18 @@ public class ArrivalTransferTerm implements ArrivalTransferTermPassengerInterfac
 	}
 
 	
-	
+	/**
+	 * retorna a variavel que simboliza o final do dia de trabalho
+	 */
 	public boolean hasDaysWorkEnded() {
 		return this.dayWorkEnd;	
 	}
 	
 	
 	//anuncia que o autocarro esta a receber pessoas
+	/**
+	 * anuncia que o autocarro esta a recolher pessoas
+	 */
 	public void announcingBusBoarding(int passNumber) {
 		lock.lock();
 		try {

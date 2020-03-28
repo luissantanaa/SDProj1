@@ -12,6 +12,11 @@ import java.lang.Math;
 import airport.Bag;
 import airport.Logger;
 
+/**
+ * 
+ * Monitor Baggage Collection Point
+ *
+ */
 
 public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,BaggageCollectPointPassengerInterface  {
 	private final ReentrantLock lock = new ReentrantLock();
@@ -22,15 +27,25 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 	
 	
 	//construtor
+	/**
+	 * 
+	 * bags é uma lista de malas
+	 */
 	public BaggageCollectPoint(Logger logger) {
 		bags = new ArrayList<Bag>();
 		//this.logger = logger;
 	}
 	
+	/**
+	 * função que sinaliza que existem malas para recolher
+	 */
 	public void moreBags() {
 		noMoreBag = false;
 	}
 	
+	/**
+	 * função usada pelo bagageiro para adicionar malas
+	 */
 	public boolean addBag(Bag bag){
 
 		boolean lost = true;
@@ -52,6 +67,9 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 		return false;
 	}
 	
+	/**
+	 * função que sinaliza que nao ha mais malas para recolher
+	 */
 	public void noMoreBags() {
 		lock.lock();
 		try {
@@ -63,6 +81,9 @@ public class BaggageCollectPoint implements BaggageCollectPointPorterInterface,B
 	}
 	
 	//função para recolher mala
+	/**
+	 * função usada pelo passageiro para recolher a sua mala
+	 */
 	public boolean collectBag(Bag bag) {
 		lock.lock();
 		try {	

@@ -8,6 +8,12 @@ import java.util.concurrent.locks.ReentrantLock;
 import Interfaces.DepartureTermEntrancePassengerInterface;
 import airport.Passenger;
 
+/**
+ * 
+ * Monitor Departure Terminal Entrance
+ *
+ */
+
 public class DepartureTermEntr implements DepartureTermEntrancePassengerInterface {
 	private int nPassengers=0;
 	private final ReentrantLock lock = new ReentrantLock();
@@ -16,11 +22,18 @@ public class DepartureTermEntr implements DepartureTermEntrancePassengerInterfac
 	
 	
 	//construtor
+	/**
+	 * pList é uma lista de passageiros que vão esperar pelo ultimo passageiro para entrar no proximo voo
+	 */
 	public DepartureTermEntr() {
 			nPassengers = 0;
 			pList = new ArrayList<>();
 	}
 	
+	/**
+	 * 
+	 * @param n nrº de passageiros que têm que esperar pelo o ultimo
+	 */
 	public void setNPassengers(int n) {
 		lock.lock();
 		try {
@@ -34,6 +47,9 @@ public class DepartureTermEntr implements DepartureTermEntrancePassengerInterfac
 	}
 	
 	
+	/**
+	 * função usada pelos passageiros para entrar no proximo voo
+	 */
 	public boolean prepareNextLeg(Passenger P) {
 		lock.lock();
 		try {

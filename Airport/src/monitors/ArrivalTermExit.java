@@ -8,6 +8,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import Interfaces.ArrivalTermExitPassengerInterface;
 import airport.Passenger;
 
+/**
+ * 
+ * Monitor Arrival Terminal Exit
+ *
+ */
 public class ArrivalTermExit  implements ArrivalTermExitPassengerInterface{
 	private int nPassengers=0;
 	private final ReentrantLock lock = new ReentrantLock();
@@ -15,12 +20,18 @@ public class ArrivalTermExit  implements ArrivalTermExitPassengerInterface{
 	private List<Passenger> pList;
 	
 	//construtor
+	/**
+	 * pList é a lista de passageiros a espera do ultimo para ir embora
+	 */
 	public ArrivalTermExit() {
 		nPassengers = 0;
 		pList = new ArrayList<>();
 	}
 	
-	
+	/**
+	 * 
+	 * @param n nrº de passageiros a ir embora
+	 */
 	public void setNPassengers(int n) {
 		lock.lock();
 		try {
@@ -30,6 +41,10 @@ public class ArrivalTermExit  implements ArrivalTermExitPassengerInterface{
 			lock.unlock();
 		}
 	}
+	
+	/**
+	 * função usada pelos passageiros para ir embora
+	 */
 	public boolean GoHome(Passenger P) {
 		lock.lock();
 		try {

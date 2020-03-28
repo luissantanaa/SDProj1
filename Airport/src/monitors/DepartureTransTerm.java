@@ -9,6 +9,12 @@ import airport.Bus;
 import airport.Logger;
 import airport.Passenger;
 
+
+/**
+ * 
+ * Monitor Departure Transfer Terminal
+ *
+ */
 public class DepartureTransTerm implements DepartureTransTermPassengerInterface,DepartureTransTermBDriverInterface{
 	private final ReentrantLock lock = new ReentrantLock();
 	private final Condition busEmpty = lock.newCondition(); //condiçao que simboliza o autocarro estar vazio
@@ -21,12 +27,20 @@ public class DepartureTransTerm implements DepartureTransTermPassengerInterface,
 	
 	
 	//construtor
+	/**
+	 * 
+	 * @param bus autocarro usado durante a simulação
+	 * @param logger
+	 */
 	public DepartureTransTerm(Bus bus, Logger logger) {
 		this.bus = bus;
 		//this.logger = logger;
 	}
 
 	//função para a saida do autocarro
+	/**
+	 * função usada pelos passageiros para sair do autocarro
+	 */
 	public boolean leaveTheBus(Passenger P) {
 		lock.lock();
 		try {
@@ -48,7 +62,9 @@ public class DepartureTransTerm implements DepartureTransTermPassengerInterface,
 		return false;
 	}
 	
-	
+	/**
+	 * função que sinaliza a chegada ao DepartureTransferTerm
+	 */
 	public void arriveDepTransTerm() {
 		lock.lock();
 		try {
@@ -59,10 +75,16 @@ public class DepartureTransTerm implements DepartureTransTermPassengerInterface,
 		}
 	}
 	
+	/**
+	 * função que sinaliza a saida do autocarro
+	 */
 	public void leaveDepTransTerm() {
 		this.arrive = false;
 	}
 	
+	/**
+	 * função que sinaliza a espera do condutor do autocarro pelos passageiros
+	 */
 	public void waitForPassengers() {
 		lock.lock();
 		try {
