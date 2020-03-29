@@ -28,8 +28,12 @@ public class Airport {
 	 * @param Passenger[][] passengers array que guarda os passageiros e o seu respetivo avião
 	 */
 	public static void main(String[] args) {
-
-		int nPlanes = 1000; // nrº de aviões
+		int nPlanes;// nrº de aviões
+		if(args.length==1) {
+			nPlanes = Integer.parseInt(args[0]);
+		}else {
+			nPlanes=5; 
+		}
 		int nPassengers = 6; // nrº de passageiros por avião
 		
 		
