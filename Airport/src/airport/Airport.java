@@ -31,9 +31,15 @@ public class Airport {
 		int nPlanes;// nrº de aviões
 		if(args.length==1) {
 			nPlanes = Integer.parseInt(args[0]);
+			if(nPlanes==0) {
+				System.out.println("Por favor defina um numero de avioes superior a 0!!");
+				System.exit(1);
+			}
+			
 		}else {
 			nPlanes=5; 
 		}
+		
 		int nPassengers = 6; // nrº de passageiros por avião
 		
 		
